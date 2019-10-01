@@ -115,7 +115,7 @@ def main():
                         'VALUES (:book_id, :author_id)',
                         {"book_id": book_id, "author_id": author_id}
                     )
-                    db.commit
+                    db.commit()
                     inserted += 1
         print(f'Books update done (inserted:{inserted}, skipped: {skipped}).')
 

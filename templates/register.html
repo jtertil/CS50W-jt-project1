@@ -19,6 +19,7 @@
 
         <!-- Form -->
         <form class="mb-6" action="/register" method="post">
+        {{ form.csrf_token }}
 
           <!-- Login -->
           <div class="form-group">
@@ -36,17 +37,17 @@
             {{ nolabel_field(form.passw, class="form-control") }}
           </div>
 
-          <!-- Password -->
+          <!-- Password confirmation-->
           <div class="form-group mb-5">
-            <label for="passw">
+            <label for="passw_c">
               password confirmation
             </label>
-            {{ nolabel_field(form.passw, class="form-control") }}
+            {{ nolabel_field(form.passw_c, class="form-control") }}
           </div>
 
           <!-- Submit -->
           <button class="btn btn-block btn-primary" type="submit">
-            Sign in
+            Sign up
           </button>
         </form>
 

@@ -19,6 +19,8 @@
 
         <!-- Form -->
         <form class="mb-6" action="/login" method="post">
+        {{ form.csrf_token }}
+
           <!-- Login -->
           <div class="form-group">
             <label for="login">
