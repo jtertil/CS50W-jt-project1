@@ -64,7 +64,6 @@ def main():
             ).fetchone()
             if already_exist:
                 skipped += 1
-                pass
             else:
                 db.execute(
                     'INSERT INTO author (name) '
@@ -116,8 +115,8 @@ def main():
                         'VALUES (:book_id, :author_id)',
                         {"book_id": book_id, "author_id": author_id}
                     )
-                db.commit
-                inserted += 1
+                    db.commit
+                    inserted += 1
         print(f'Books update done (inserted:{inserted}, skipped: {skipped}).')
 
     file = open("books.csv")

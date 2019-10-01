@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import nolabel_field %}
+
+{% block content %}
+<section class="section-border border-primary">
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
+      <div class="col-12 col-md-5 col-lg-4 py-8 py-md-11">
+
+        <!-- Heading -->
+        <h1 class="mb-0 font-weight-bold text-center">
+          Sign in
+        </h1>
+
+        <!-- Text -->
+        <p class="mb-6 text-center text-muted">
+          Happy to see you again.
+        </p>
+
+        <!-- Form -->
+        <form class="mb-6" action="/login" method="post">
+          <!-- Login -->
+          <div class="form-group">
+            <label for="login">
+              login
+            </label>
+            {{ nolabel_field(form.login, class="form-control") }}
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-5">
+            <label for="passw">
+              password
+            </label>
+            {{ nolabel_field(form.passw, class="form-control") }}
+          </div>
+
+          <!-- Submit -->
+          <button class="btn btn-block btn-primary" type="submit">
+            Sign in
+          </button>
+        </form>
+
+        <!-- Text -->
+        <p class="mb-0 font-size-sm text-center text-muted">
+          <a href="{{ url_for('register')}}">Sign up</a> if you don't have an account yet..
+        </p>
+
+      </div>
+    </div> <!-- / .row -->
+  </div> <!-- / .container -->
+</section>
+{% endblock %}

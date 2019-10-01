@@ -1,11 +1,16 @@
 import os
 
-from flask import Flask, session
+from flask import Flask, render_template
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from forms import LoginForm, RegisterForm
+
 app = Flask(__name__)
+
+# Change in production
+app.secret_key = 'secret'
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
@@ -24,3 +29,15 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     return "Project 1: TODO"
+
+
+@app.route("/login")
+def login():
+    form = LoginForm()
+    return render_template('login.html', form=form)
+
+
+@app.route("/register")
+def register():
+    form = RegisterForm()
+    return render_template('register.html', form=form)

@@ -1,0 +1,3 @@
+{% macro nolabel_field(field) %}
+    <td>{{ field(**kwargs) | safe }}</td>
+{% endmacro %}
