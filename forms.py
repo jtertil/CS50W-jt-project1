@@ -4,8 +4,8 @@ from wtforms.validators import InputRequired, Length, EqualTo
 
 
 class LoginForm(FlaskForm):
-    login = StringField('login', validators = [InputRequired(), Length(3, 64)])
-    passw = PasswordField('password', validators = [InputRequired()])
+    login = StringField('login', validators=[InputRequired(), Length(3, 64)])
+    passw = PasswordField('password', validators=[InputRequired()])
     submit = SubmitField('login')
 
 
@@ -21,4 +21,3 @@ class RegisterForm(FlaskForm):
         validators=[InputRequired(),
                     EqualTo('passw', message='Password must match.')])
     submit = SubmitField('register')
-

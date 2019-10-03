@@ -31,4 +31,4 @@ app.config["SESSION_TYPE"] = "filesystem"
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-import views
+import views  # noqa: F401

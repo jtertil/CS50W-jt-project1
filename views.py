@@ -15,10 +15,10 @@ def register():
     form = RegisterForm()
     if request.method == 'POST' and form.validate_on_submit():
         u = db.execute(
-                'SELECT * FROM public.user '
-                'WHERE name = :name',
-                {"name": form.login.data}
-            ).fetchone()
+            'SELECT * FROM public.user '
+            'WHERE name = :name',
+            {"name": form.login.data}
+        ).fetchone()
 
         if u:
             flash('user already exist', 'debug')
@@ -45,10 +45,10 @@ def login():
 
     if request.method == 'POST' and form.validate_on_submit():
         u = db.execute(
-                'SELECT * FROM public.user '
-                'WHERE name = :name',
-                {"name": form.login.data}
-            ).fetchone()
+            'SELECT * FROM public.user '
+            'WHERE name = :name',
+            {"name": form.login.data}
+        ).fetchone()
 
         if not u:
             flash('no user', 'debug')

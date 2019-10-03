@@ -71,7 +71,9 @@ def main():
                     {"name": a})
                 inserted += 1
         db.commit()
-        print(f'Authors update done (inserted:{inserted}, skipped: {skipped}).')
+        print(
+            f'Authors update done (inserted:{inserted}, skipped: {skipped}).'
+        )
 
     def update_books(list_of_books):
         """
