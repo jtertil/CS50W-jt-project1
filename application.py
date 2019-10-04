@@ -32,3 +32,4 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 import views  # noqa: F401
+import api  # noqa: F401

@@ -32,7 +32,7 @@ def main():
         reader = csv.reader(file)
         books = []
 
-        for row in reader:
+        for idx, row in enumerate(reader):
             try:
                 books.append([
                     row[0],
@@ -41,7 +41,8 @@ def main():
                     int(row[3])
                 ])
             except ValueError:
-                print(f"Err, skipping: {row[0]} {row[1]} {row[2]} {row[3]}")
+                print(f"Error, skipping row number {idx+1}.")
+                print(f"Row data: {row[0]} {row[1]} {row[2]} {row[3]}")
 
         return books
 

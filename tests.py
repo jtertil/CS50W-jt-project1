@@ -43,16 +43,38 @@ class TestViews(unittest.TestCase):
         r = self.app.post('/logout')
         self.assertEqual(405, r.status_code)
 
-    def test_book_404_response(self):
-        r = self.app.get('/book/fakeisbn')
+
+class TestAPI(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
+
+    def tearDown(self):
+        pass
+
+    def test_api_404_response(self):
+        r = self.app.get('/api/wrongisbn')
         self.assertEqual(404, r.status_code)
 
-    def test_book_get_response(self):
-        r = self.app.get('/book/0380795272')
+    def test_api_get_response(self):
+        r = self.app.get('/api/0380795272')
         self.assertEqual(200, r.status_code)
 
-    def test_book_post_response(self):
-        r = self.app.post('/book/0380795272')
+    def test_api_return_json(self):
+        r = self.app.get('/api/0380795272')
+        self.assertEqual(True, r.is_json)
+
+    def test_api_json_keys(self):
+        r = self.app.get('/api/0380795272')
+        expected_json_keys = [
+            'author', 'average_score', 'isbn', 'review_count', 'title', 'year']
+        actual_json_keys = r.get_json().keys()
+        # symmetric difference should be an empty list (no difference)
+        diff = set(expected_json_keys) ^ set(actual_json_keys)
+        self.assertEqual(set(), diff)
+
+    def test_api_post_response(self):
+        r = self.app.post('/api/0380795272')
         self.assertEqual(405, r.status_code)
 
 
