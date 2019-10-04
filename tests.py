@@ -1,6 +1,8 @@
 import unittest
 from application import app
 
+from views import is_isbn_code
+
 
 class TestViews(unittest.TestCase):
 
@@ -42,6 +44,47 @@ class TestViews(unittest.TestCase):
     def test_logout_post_response(self):
         r = self.app.post('/logout')
         self.assertEqual(405, r.status_code)
+
+    def test_search_get_response(self):
+        r = self.app.get('/search')
+        self.assertEqual(200, r.status_code)
+
+    def test_search_post_response(self):
+        r = self.app.post('/search')
+        self.assertEqual(200, r.status_code)
+
+
+class TestHelpers(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
+
+    def tearDown(self):
+        pass
+
+    def test_empty_not_isbn(self):
+        check = is_isbn_code('')
+        self.assertEqual(False, check)
+
+    def test_author_not_isbn(self):
+        check = is_isbn_code('Raymond E. Feist')
+        self.assertEqual(False, check)
+
+    def test_title_not_isbn(self):
+        check = is_isbn_code('Krondor: The Betrayal')
+        self.assertEqual(False, check)
+
+    def test_isbn10_is_isbn(self):
+        check = is_isbn_code('0380795272')
+        self.assertEqual('0380795272', check)
+
+    def test_isbn13_is_isbn(self):
+        check = is_isbn_code('9780380795277')
+        self.assertEqual('0380795272', check)
+
+    def test_isbn_cleanup(self):
+        check = is_isbn_code('#0-380-79527-2/')
+        self.assertEqual('0380795272', check)
 
 
 class TestAPI(unittest.TestCase):

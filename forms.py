@@ -21,3 +21,8 @@ class RegisterForm(FlaskForm):
         validators=[InputRequired(),
                     EqualTo('passw', message='Password must match.')])
     submit = SubmitField('register')
+
+
+class SearchForm(FlaskForm):
+    search = StringField('search', validators=[InputRequired(), Length(3, 64)])
+    submit = SubmitField('submit')

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import nolabel_field %}
+
+{% block content %}
+<section class="section-border border-primary">
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
+      <div class="col-12 col-md-5 col-lg-4 py-8 py-md-11">
+
+        <!-- Heading -->
+        <h1 class="mb-0 font-weight-bold text-center">
+          Go On!
+        </h1>
+
+        <!-- Text -->
+        <p class="mb-6 text-center text-muted">
+          5ooo books are waiting for you...
+        </p>
+
+        <!-- Form -->
+        <form class="mb-6" action="/search" method="post">
+          {{ form.csrf_token }}
+
+          <!-- Search-->
+          <div class="input-group mb-3">
+            {{ nolabel_field(form.search, class="form-control", placeholder="title, author or isbn") }}
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit">search</button>
+            </div>
+          </div>
+
+        </form>
+
+      </div> <!-- /  -->
+    </div> <!-- / .row -->
+  </div> <!-- / .container -->
+</section>
+{% endblock %}

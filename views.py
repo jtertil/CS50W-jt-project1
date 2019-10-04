@@ -3,7 +3,23 @@ from flask import request, render_template, redirect, url_for, session,\
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from application import app, db
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, SearchForm
+
+from isbnlib import is_isbn10, is_isbn13, to_isbn10
+
+
+def is_isbn_code(search):
+    """checks if the received string is valid isbn number"""
+    check = ''.join(ch for ch in search if ch.isalnum())
+
+    if is_isbn13(check):
+        return to_isbn10(check)
+
+    if is_isbn10(check):
+        return check
+
+    else:
+        return False
 
 
 @app.route('/')
@@ -73,3 +89,15 @@ def logout():
     session['user'] = None
     flash(f"logged as {session['user']}", 'debug')
     return redirect(url_for('index'))
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        if is_isbn_code(form.search.data):
+            return 'isbn'
+        else:
+            return 'not isbn'
+
+    return render_template('search.html', form=form)
