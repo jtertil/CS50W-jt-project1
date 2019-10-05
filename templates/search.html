@@ -41,7 +41,7 @@
           </h4>
           <br>
           {% for r in results[0] %}
-          <p>{{ r.title }} - {% for a in r[4] %}{{ a }}, {% endfor %} {{ r.year }}</p>
+          <p><a href="/book/{{ r.isbn }}">{{ r.title }} - {% for a in r[4] %}{{ a }}, {% endfor %} {{ r.year }}</a></p>
           {% endfor %}
           {% endif %}
 

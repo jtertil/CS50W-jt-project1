@@ -34,6 +34,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+# Set up Goodreads API
+gr_api_key = os.getenv("GR_API_KEY")
+
 
 def is_isbn_code(search):
     """checks if the received string is valid isbn number"""

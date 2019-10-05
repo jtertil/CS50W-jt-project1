@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import nolabel_field %}
+
+{% block content %}
+<section class="section-border border-primary">
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
+      <div class="col-12 col-md-8 col-lg-8 py-8 py-md-11">
+
+        <ul>
+          <li>Title: {{ book_json.title }}</li>
+          <li>Author(s): {{ book_json.author }}</li>
+          <li>Publication year: {{ book_json.year }}</li>
+          <li>ISBN number: {{ book_json.isbn }}</li>
+          <li>Review count: {{ book_json.review_count }}</li>
+          {% if book_json.average_score %}
+          <li>Avarage score: {{ book_json.average_score }}</li>
+          {% endif %}
+        </ul>
+        {% if gr_api_json %}
+        <ul>
+          <li>Goodreads average rating: {{ gr_api_json.books[0].average_rating }}</li>
+          <li>Goodreads ratings count: {{ gr_api_json.books[0].ratings_count }}</li>
+        </ul>
+        {% else %}
+        <p>No data from Goodreads.</p>
+        {% endif %}
+
+        <form class="mb-6" action="/book/{{ book_json.isbn }}" method="post">
+          {{ form.csrf_token }}
+
+          <div class="input-group">
+          {{ nolabel_field(form.review, class="form-control", placeholder="review", rows="6") }}
+          </div>
+          <br>
+          <div class="form-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="">Rating</label>
+              {{ nolabel_field(form.rating, class="form-control") }}
+              <button class="btn btn-outline-secondary" type="submit">submit</button>
+            </div>
+          </div>
+        </form>
+
+        <h4>Users reviews:</h4>
+        {% if reviews %}
+        {% for r in reviews %}
+        <blockquote class="blockquote">
+          <p class="mb-0">{{ r.review }}</p>
+          <footer class="blockquote-footer"><em>{{ r.user }}</em><cite></footer>
+        </blockquote>
+        {% endfor %}
+        {% else %}
+        <p>Not reviews yet!</p>
+        {% endif %}
+      </div> <!-- /  -->
+    </div> <!-- / .row -->
+  </div> <!-- / .container -->
+</section>
+{% endblock %}
+
+

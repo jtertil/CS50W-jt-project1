@@ -1,9 +1,12 @@
+import requests
+
 from flask import request, render_template, redirect, url_for, session,\
     flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.exceptions import abort
 
-from application import app, db, is_isbn_code, login_only
-from forms import LoginForm, RegisterForm, SearchForm
+from application import app, db, is_isbn_code, login_only, gr_api_key
+from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
 
 
 @app.route('/')
@@ -61,6 +64,7 @@ def login():
 
         elif check_password_hash(u[2], request.form['passw']):
             session['user'] = request.form['login']
+            session['user_id'] = u.id
             flash(f"logged as {session['user']}", 'debug')
             return redirect(url_for('search'))
 
@@ -85,13 +89,8 @@ def search():
         user_provides_isbn = is_isbn_code(form.search.data)
 
         if user_provides_isbn:
-            s_q = db.execute(
-                'SELECT * FROM public.book '
-                'WHERE isbn = :isbn',
-                {"isbn": user_provides_isbn}
-            ).fetchone()
-            # TODO redirect directly to book page
-            return str(s_q)
+            return redirect(url_for('book', book_isbn=user_provides_isbn))
+
         else:
             s_q_authors = db.execute(
                 'SELECT * FROM public.author '
@@ -121,3 +120,75 @@ def search():
         flash(f"validation error: {form.errors}", 'debug')
 
     return render_template('search.html', form=form)
+
+
+@app.route('/book/<string:book_isbn>', methods=['GET', 'POST'])
+@login_only
+def book(book_isbn):
+    form = ReviewForm()
+
+    try:
+        book_json = requests.get(
+            f'http://localhost:5000/api/{book_isbn}').json()
+    # TODO exception to broad
+    except:
+        abort(404)
+
+    try:
+        gr_api_json = requests.get(
+            "https://www.goodreads.com/book/review_counts.json",
+            params={"key": gr_api_key, "isbns": book_isbn}).json()
+    # TODO exception to broad
+    except:
+        gr_api_json = None
+
+    book_id = db.execute(
+        'SELECT id FROM public.book '
+        'WHERE isbn = :isbn',
+        {'isbn': book_json['isbn']}
+    ).fetchone()
+
+    r_q = db.execute(
+        'SELECT public.user_book.*, '
+        'public.user.name '
+        'FROM public.user_book '
+        'JOIN public.user '
+        'ON public.user.id = public.user_book.user_id '
+        'WHERE book_id = :book_id '
+        'ORDER BY (id) DESC ',
+        {"book_id": book_id[0]}
+    ).fetchall()
+
+    # TODO avoid resending api requests in case of page reload
+    if request.method == 'POST' and form.validate_on_submit():
+        db.execute(
+            'INSERT INTO public.user_book (user_id, book_id, score, review) '
+            'VALUES (:user_id, :book_id, :score, :review) '
+            'ON CONFLICT (user_id, book_id) '
+            'DO UPDATE SET score = :score, review = :review',
+            {"user_id": session['user_id'],
+             "book_id": book_id[0],
+             "score": form.rating.data,
+             "review": form.review.data
+             })
+        db.commit()
+        return redirect(url_for('book', book_isbn=book_isbn))
+
+    reviews = []
+    already_review = False
+    for r in r_q:
+        if r[5] == session['user']:
+            already_review = True
+            form.review.default = r[4]
+            form.rating.default = int(r[3])
+            form.process()
+        reviews.append({'user': r[5], 'rating': r[3], 'review': r[4]})
+
+    return render_template(
+        'book.html',
+        form=form,
+        book_json=book_json,
+        gr_api_json=gr_api_json,
+        reviews=reviews,
+        already_review=already_review
+    )

@@ -35,12 +35,10 @@
     <ul class="navbar-nav ml-auto">
       {% if session['user'] %}
       <li class="nav-item">
-        <a class="nav-link" href="#" tabindex="-1"
-           aria-disabled="true">Search for a book</a>
+        <a class="nav-link" href="/search" tabindex="-1">Search for a book</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/logout" tabindex="-1"
-           aria-disabled="true">Log out</a>
+        <a class="nav-link" href="/logout" tabindex="-1">Log out</a>
       </li>
       {% else %}
       <li class="nav-item">
