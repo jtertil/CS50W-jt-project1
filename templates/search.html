@@ -31,6 +31,43 @@
 
         </form>
 
+        <!-- Results -->
+        {% if results %}
+        <div>
+          {% if results[0] %}
+          <!-- Books -->
+          <h4 class="mb-0 font-weight-bold text-center">
+          Books results:
+          </h4>
+          <br>
+          {% for r in results[0] %}
+          <p>{{ r.title }} - {% for a in r[4] %}{{ a }}, {% endfor %} {{ r.year }}</p>
+          {% endfor %}
+          {% endif %}
+
+          {% if results[1] %}
+          <!-- Authors -->
+          <h4 class="mb-0 font-weight-bold text-center">
+          Authors results:
+          </h4>
+          <br>
+          {% for r in results[1] %}
+          <p>{{ r.name }}</p>
+          {% endfor %}
+
+          {% elif  not results[0] and not results[1] %}
+          <h4 class="mb-0 font-weight-bold text-center">
+            Sorry no results this time..
+          </h4>
+
+          {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+
       </div> <!-- /  -->
     </div> <!-- / .row -->
   </div> <!-- / .container -->

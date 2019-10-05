@@ -1,7 +1,6 @@
 import unittest
-from application import app
-
-from views import is_isbn_code
+from application import app, is_isbn_code, login_only
+from flask import session
 
 
 class TestViews(unittest.TestCase):
@@ -47,11 +46,11 @@ class TestViews(unittest.TestCase):
 
     def test_search_get_response(self):
         r = self.app.get('/search')
-        self.assertEqual(200, r.status_code)
+        self.assertEqual(302, r.status_code)
 
     def test_search_post_response(self):
         r = self.app.post('/search')
-        self.assertEqual(200, r.status_code)
+        self.assertEqual(302, r.status_code)
 
 
 class TestHelpers(unittest.TestCase):
@@ -85,6 +84,45 @@ class TestHelpers(unittest.TestCase):
     def test_isbn_cleanup(self):
         check = is_isbn_code('#0-380-79527-2/')
         self.assertEqual('0380795272', check)
+
+
+class TestFuncDeco(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
+
+    def tearDown(self):
+        with app.test_request_context():
+            session['user'] = None
+
+    def test_func_wo_dec_returns_1(self):
+
+        def func():
+            return 1
+
+        check = func()
+        self.assertEqual(1, check)
+
+    def test_func_w_dec_returns_302(self):
+        with app.test_request_context():
+
+            @login_only
+            def func():
+                return 1
+
+            check = func()
+        self.assertEqual(302, check.status_code)
+
+    def test_func_w_dec_returns_1_when_session(self):
+        with app.test_request_context():
+            session['user'] = 'test'
+
+            @login_only
+            def func():
+                return 1
+
+            check = func()
+        self.assertEqual(1, check)
 
 
 class TestAPI(unittest.TestCase):

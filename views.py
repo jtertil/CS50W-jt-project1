@@ -2,24 +2,8 @@ from flask import request, render_template, redirect, url_for, session,\
     flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from application import app, db
+from application import app, db, is_isbn_code, login_only
 from forms import LoginForm, RegisterForm, SearchForm
-
-from isbnlib import is_isbn10, is_isbn13, to_isbn10
-
-
-def is_isbn_code(search):
-    """checks if the received string is valid isbn number"""
-    check = ''.join(ch for ch in search if ch.isalnum())
-
-    if is_isbn13(check):
-        return to_isbn10(check)
-
-    if is_isbn10(check):
-        return check
-
-    else:
-        return False
 
 
 @app.route('/')
@@ -78,13 +62,14 @@ def login():
         elif check_password_hash(u[2], request.form['passw']):
             session['user'] = request.form['login']
             flash(f"logged as {session['user']}", 'debug')
-            return redirect(url_for('index'))
+            return redirect(url_for('search'))
 
     else:
         return render_template('login.html', form=form)
 
 
 @app.route('/logout')
+@login_only
 def logout():
     session['user'] = None
     flash(f"logged as {session['user']}", 'debug')
@@ -92,12 +77,47 @@ def logout():
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@login_only
 def search():
     form = SearchForm()
+    print('user' in session)
     if request.method == 'POST' and form.validate_on_submit():
-        if is_isbn_code(form.search.data):
-            return 'isbn'
+        user_provides_isbn = is_isbn_code(form.search.data)
+
+        if user_provides_isbn:
+            s_q = db.execute(
+                'SELECT * FROM public.book '
+                'WHERE isbn = :isbn',
+                {"isbn": user_provides_isbn}
+            ).fetchone()
+            # TODO redirect directly to book page
+            return str(s_q)
         else:
-            return 'not isbn'
+            s_q_authors = db.execute(
+                'SELECT * FROM public.author '
+                'WHERE LOWER(name) LIKE LOWER(:search_like) ',
+                {'search_like': '%'+form.search.data+'%'}
+            ).fetchall()
+
+            s_q_books = db.execute(
+                'SELECT public.book.*, '
+                'array_agg(public.author.name) '
+                'FROM public.book '
+                'JOIN public.book_author '
+                'ON public.book.id = public.book_author.book_id '
+                'JOIN public.author '
+                'ON public.book_author.author_id = public.author.id '
+                'WHERE isbn LIKE :search_like '
+                'OR to_tsvector(title) @@ to_tsquery(:search) '
+                'GROUP BY public.book.id',
+                {'search': form.search.data,
+                 'search_like': '%'+form.search.data+'%'}
+            ).fetchall()
+
+            results = (s_q_books, s_q_authors)
+            return render_template('search.html', form=form, results=results)
+
+    if not form.validate_on_submit():
+        flash(f"validation error: {form.errors}", 'debug')
 
     return render_template('search.html', form=form)
