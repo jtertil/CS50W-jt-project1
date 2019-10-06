@@ -98,6 +98,7 @@ def search():
                 {'search_like': '%'+form.search.data+'%'}
             ).fetchall()
 
+            # TODO iisue: error when more than one word in search form
             s_q_books = db.execute(
                 'SELECT public.book.*, '
                 'array_agg(public.author.name) '
@@ -184,6 +185,7 @@ def book(book_isbn):
             form.process()
         reviews.append({'user': r[5], 'rating': r[3], 'review': r[4]})
 
+    flash(f"validation error: {form.errors}", 'debug')
     return render_template(
         'book.html',
         form=form,

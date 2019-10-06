@@ -30,7 +30,7 @@ class SearchForm(FlaskForm):
 
 
 class ReviewForm(FlaskForm):
-    review = TextAreaField('search', validators=[Length(3, 300)])
+    review = TextAreaField('review', validators=[Length(0, 300)])
     rating = SelectField(
         'ratings',
         choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])

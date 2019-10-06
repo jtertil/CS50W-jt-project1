@@ -5,66 +5,79 @@
 <section class="section-border border-primary">
   <div class="container d-flex flex-column">
     <div class="row align-items-center justify-content-center no-gutters min-vh-100">
-      <div class="col-12 col-md-5 col-lg-4 py-8 py-md-11">
+      <div class="col-12 col-md-8 col-lg-8 py-8 py-md-11">
+        <div class="min-vh-100 d-flex flex-column justify-content-center">
 
-        <!-- Heading -->
-        <h1 class="mb-0 font-weight-bold text-center">
-          Go On!
-        </h1>
+          <!-- Heading -->
+          <h1 class="mb-0 font-weight-bold text-center">
+            Go On!
+          </h1>
 
-        <!-- Text -->
-        <p class="mb-6 text-center text-muted">
-          5ooo books are waiting for you...
-        </p>
+          <!-- Text -->
+          <p class="mb-6 text-center text-muted">
+            5ooo books are waiting for you...
+          </p>
 
-        <!-- Form -->
-        <form class="mb-6" action="/search" method="post">
-          {{ form.csrf_token }}
+          <!-- Form -->
+          <form class="mb-6" action="/search#results" method="post">
+            {{ form.csrf_token }}
 
-          <!-- Search-->
-          <div class="input-group mb-3">
-            {{ nolabel_field(form.search, class="form-control", placeholder="title, author or isbn") }}
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="submit">search</button>
+            <!-- Search-->
+            <div class="input-group mb-3">
+              {{ nolabel_field(form.search, class="form-control", placeholder="title, author or isbn") }}
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">search</button>
+              </div>
             </div>
-          </div>
 
-        </form>
-
-        <!-- Results -->
-        {% if results %}
-        <div>
-          {% if results[0] %}
-          <!-- Books -->
-          <h4 class="mb-0 font-weight-bold text-center">
-          Books results:
-          </h4>
-          <br>
-          {% for r in results[0] %}
-          <p><a href="/book/{{ r.isbn }}">{{ r.title }} - {% for a in r[4] %}{{ a }}, {% endfor %} {{ r.year }}</a></p>
-          {% endfor %}
-          {% endif %}
-
-          {% if results[1] %}
-          <!-- Authors -->
-          <h4 class="mb-0 font-weight-bold text-center">
-          Authors results:
-          </h4>
-          <br>
-          {% for r in results[1] %}
-          <p>{{ r.name }}</p>
-          {% endfor %}
-
-          {% elif  not results[0] and not results[1] %}
-          <h4 class="mb-0 font-weight-bold text-center">
-            Sorry no results this time..
-          </h4>
-
-          {% endif %}
+          </form>
 
         </div>
+        <div id="results" class="min-vh-100 d-flex flex-column justify-content-around">
+          <!-- Results -->
+          {% if results %}
+          <div>
+            {% if results[0] %}
+            <!-- Books -->
+            <h4 class="mb-0 font-weight-bold text-center">
+            Books results:
+            </h4>
+            <hr>
+            <br>
+              {% for r in results[0] %}
+              <div class="w-100 border border-muted p-2 mb-2 d-flex justify-content-between">
+                <div>
+                  <h3 class="font-weight-bold">{{ r.title }}</h3>
+                  <em><small class="ml-4 text-muted">by {% for a in r[4] %}{{ a }}, {% endfor %} {{ r.year }}</small></em>
+                </div>
+                <div class="d-flex flex-column justify-content-end">
+                  <a href="/book/{{ r.isbn }}" class="btn btn-outline-dark btn-sm" role="button" aria-pressed="true">details</a>
+                </div>
+              </div>
+              {% endfor %}
+              {% endif %}
 
-        {% endif %}
+            {% if results[1] %}
+            <!-- Authors -->
+            <h4 class="mb-0 font-weight-bold text-center">
+            Authors results:
+            </h4>
+            <br>
+            {% for r in results[1] %}
+            <p>{{ r.name }}</p>
+            {% endfor %}
+
+            {% elif not results[0] and not results[1] %}
+            <h4 class="mb-0 font-weight-bold text-center">
+              Sorry no results this time..
+            </h4>
+
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+
+
 
 
 

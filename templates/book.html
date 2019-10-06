@@ -1,30 +1,36 @@
 {% extends "base.html" %}
 {% from "_formhelpers.html" import nolabel_field %}
 
+{% block styles %}
+{% endblock %}
+
 {% block content %}
 <section class="section-border border-primary">
   <div class="container d-flex flex-column">
     <div class="row align-items-center justify-content-center no-gutters min-vh-100">
       <div class="col-12 col-md-8 col-lg-8 py-8 py-md-11">
+        <div class="min-vh-100 d-flex flex-column justify-content-around">
+           <p class="display-1 text-center font-weight-bold">
+           {{ book_json.title }}
+           </p>
 
-        <ul>
-          <li>Title: {{ book_json.title }}</li>
-          <li>Author(s): {{ book_json.author }}</li>
-          <li>Publication year: {{ book_json.year }}</li>
-          <li>ISBN number: {{ book_json.isbn }}</li>
-          <li>Review count: {{ book_json.review_count }}</li>
-          {% if book_json.average_score %}
-          <li>Avarage score: {{ book_json.average_score }}</li>
-          {% endif %}
-        </ul>
-        {% if gr_api_json %}
-        <ul>
-          <li>Goodreads average rating: {{ gr_api_json.books[0].average_rating }}</li>
-          <li>Goodreads ratings count: {{ gr_api_json.books[0].ratings_count }}</li>
-        </ul>
-        {% else %}
-        <p>No data from Goodreads.</p>
-        {% endif %}
+         <p class="text-uppercase text-center text-muted font-weight-light display-5">{{ book_json.author }} - {{ book_json.year }} - {{ book_json.isbn }}</p>
+        </div>
+        <hr>
+        <div class="min-vh-100 d-flex flex-column justify-content-around">
+          <div>
+            <p class=" display-4 ">reviews</p>
+            {% if book_json.average_score %}
+            <p class="text-muted font-weight-light display-5">
+              Average score: {{ book_json.average_score }} from {{ book_json.review_count }} reviews.
+            </p>
+            {% endif %}
+            {% if gr_api_json %}
+            <p class="text-muted font-weight-light display-5">
+              <a target="_blank" href="https://www.goodreads.com/book/show/{{ gr_api_json.books[0].id }}">Goodreads</a> score: {{ gr_api_json.books[0].average_rating }} from {{ gr_api_json.books[0].work_text_reviews_count }} reviews.
+            </p>
+            {% endif %}
+          </div>
 
         <form class="mb-6" action="/book/{{ book_json.isbn }}" method="post">
           {{ form.csrf_token }}
@@ -41,18 +47,24 @@
             </div>
           </div>
         </form>
-
-        <h4>Users reviews:</h4>
+        </div>
+        <hr>
         {% if reviews %}
+        <div class="min-vh-100 d-flex flex-column justify-content-start">
         {% for r in reviews %}
-        <blockquote class="blockquote">
-          <p class="mb-0">{{ r.review }}</p>
-          <footer class="blockquote-footer"><em>{{ r.user }}</em><cite></footer>
-        </blockquote>
+          {% if r.review %}
+          <blockquote class="blockquote display-5">
+            <cite class="mb-0">{{ r.review }}</cite>
+            <footer class="blockquote-footer"><em>{{ r.user }}</em></footer>
+          </blockquote>
+          {% endif %}
         {% endfor %}
-        {% else %}
-        <p>Not reviews yet!</p>
+        </div>
+        <hr>
         {% endif %}
+
+
+
       </div> <!-- /  -->
     </div> <!-- / .row -->
   </div> <!-- / .container -->
