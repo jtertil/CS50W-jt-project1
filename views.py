@@ -26,6 +26,7 @@ def register():
 
         if u:
             flash('user already exist', 'debug')
+            flash(f'username {form.login.data} not available', 'alert')
             return render_template('register.html', form=form)
 
         db.execute(
@@ -35,10 +36,17 @@ def register():
              "hash": generate_password_hash(form.passw.data)}
         )
         db.commit()
-        flash('registration ok', 'debug')
+        flash(
+            'Registration completed successfully. '
+            'Now you can <a href="./login" class="alert-link">login</a>.',
+            'success')
         return redirect(url_for('index'))
 
     else:
+        for field in form.errors:
+            for err in form.errors[field]:
+                flash(f'{field}: {err}', 'alert')
+
         flash(form.errors, 'debug')
         return render_template('register.html', form=form)
 
@@ -60,6 +68,7 @@ def login():
 
         if not check_password_hash(u[2], request.form['passw']):
             flash('no password match', 'debug')
+            flash(f'login and password no match', 'alert')
             return render_template('login.html', form=form)
 
         elif check_password_hash(u[2], request.form['passw']):
@@ -69,6 +78,9 @@ def login():
             return redirect(url_for('search'))
 
     else:
+        for field in form.errors:
+            for err in form.errors[field]:
+                flash(f'{field}: {err}', 'alert')
         return render_template('login.html', form=form)
 
 
@@ -119,6 +131,9 @@ def search():
 
     if not form.validate_on_submit():
         flash(f"validation error: {form.errors}", 'debug')
+        for field in form.errors:
+            for err in form.errors[field]:
+                flash(f'{field}: {err}', 'alert')
 
     return render_template('search.html', form=form, results=None)
 
