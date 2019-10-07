@@ -8,8 +8,8 @@
 <section class="section-border border-primary">
   <div class="container d-flex flex-column">
     <div class="row align-items-center justify-content-center no-gutters min-vh-100">
-      <div class="col-12 col-md-8 col-lg-8 py-8 py-md-11">
-        <div class="min-vh-100 d-flex flex-column justify-content-around">
+      <div class="col-12 col-lg-8">
+        <div class="min-vh-100 d-flex flex-column justify-content-around";">
            <p class="display-1 text-center font-weight-bold">
            {{ book_json.title }}
            </p>
@@ -17,53 +17,94 @@
          <p class="text-uppercase text-center text-muted font-weight-light display-5">{{ book_json.author }} - {{ book_json.year }} - {{ book_json.isbn }}</p>
         </div>
         <hr>
-        <div class="min-vh-100 d-flex flex-column justify-content-around">
-          <div>
-            <p class=" display-4 ">reviews</p>
+
+        <div id="reviews" class="d-flex flex-column justify-content-center">
+          <div style="margin-top: 25%">
             {% if book_json.average_score %}
-            <p class="text-muted font-weight-light display-5">
-              Average score: {{ book_json.average_score }} from {{ book_json.review_count }} reviews.
-            </p>
+            <p class="ml-md-5 ml-2  h5">
+              <span>Average score: {{ book_json.average_score }} from {{ book_json.review_count }} reviews.</span>
             {% endif %}
             {% if gr_api_json %}
-            <p class="text-muted font-weight-light display-5">
-              <a target="_blank" href="https://www.goodreads.com/book/show/{{ gr_api_json.books[0].id }}">Goodreads</a> score: {{ gr_api_json.books[0].average_rating }} from {{ gr_api_json.books[0].work_text_reviews_count }} reviews.
+              <br>
+              <span><a target="_blank" href="https://www.goodreads.com/book/show/{{ gr_api_json.books[0].id }}">Goodreads: </a>score {{ gr_api_json.books[0].average_rating }} and {{ gr_api_json.books[0].work_text_reviews_count }} reviews.<span>
             </p>
             {% endif %}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-outline-dark btn-sm ml-5 mt-3" data-toggle="modal" data-target="#exampleModal">
+              write your review
+            </button>
+          </div>
+          <div style="z-index: -1; margin-top: -40%;">
+
+            <svg viewBox="0 0 25 20" fill="#f8f9fa">
+              <text x="2" y="15">
+                {% if book_json.average_score %}
+                {{ book_json.average_score }}
+                {% else %}
+                score
+                {% endif %}
+              </text>
+            </svg>
           </div>
 
-        <form class="mb-6" action="/book/{{ book_json.isbn }}" method="post">
-          {{ form.csrf_token }}
 
-          <div class="input-group">
-          {{ nolabel_field(form.review, class="form-control", placeholder="review", rows="6") }}
-          </div>
-          <br>
-          <div class="form-group">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="">Rating</label>
-              {{ nolabel_field(form.rating, class="form-control") }}
-              <button class="btn btn-outline-secondary" type="submit">submit</button>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">write your review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <form class="mb-5" action="/book/{{ book_json.isbn }}#reviews" method="post">
+              {{ form.csrf_token }}
+              <div class="modal-body">
+                <div class="input-group">
+                {{ nolabel_field(form.review, class="form-control", placeholder="review", rows="6") }}
+                </div>
+                <br>
+                <div class="form-group">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" for="">Rating</label>
+                    {{ nolabel_field(form.rating, class="form-control") }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark btn-sm" data-dismiss="modal">close</button>
+                <button class="btn btn-outline-dark btn-sm" type="submit">submit</button>
+              </div>
+
+              </form>
             </div>
           </div>
-        </form>
+        </div>
+
+
         </div>
         <hr>
         {% if reviews %}
         <div class="min-vh-100 d-flex flex-column justify-content-start">
         {% for r in reviews %}
           {% if r.review %}
+          <div class="mt-5">
           <blockquote class="blockquote display-5">
             <cite class="mb-0">{{ r.review }}</cite>
-            <footer class="blockquote-footer"><em>{{ r.user }}</em></footer>
+            <footer class="blockquote-footer ml-3"><em>{{ r.user }}</em></footer>
           </blockquote>
+          </div>
           {% endif %}
         {% endfor %}
         </div>
         <hr>
         {% endif %}
-
-
 
       </div> <!-- /  -->
     </div> <!-- / .row -->

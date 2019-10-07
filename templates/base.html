@@ -24,7 +24,7 @@
 </head>
 <body>
 <!-- navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+<nav class="navbar navbar-expand-sm navbar-light bg-light sticky-top">
   <a class="navbar-brand" href="/">Books</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarNav" aria-controls="navbarNav"
@@ -35,7 +35,7 @@
     <ul class="navbar-nav ml-auto">
       {% if session['user'] %}
       <li class="nav-item">
-        <a class="nav-link" href="/search" tabindex="-1">Search for a book</a>
+        <a class="nav-link" href="/search" tabindex="-1">Search</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/logout" tabindex="-1">Log out</a>

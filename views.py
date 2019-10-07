@@ -84,7 +84,6 @@ def logout():
 @login_only
 def search():
     form = SearchForm()
-    print('user' in session)
     if request.method == 'POST' and form.validate_on_submit():
         user_provides_isbn = is_isbn_code(form.search.data)
 
@@ -98,7 +97,7 @@ def search():
                 {'search_like': '%'+form.search.data+'%'}
             ).fetchall()
 
-            # TODO iisue: error when more than one word in search form
+            print(form.search.data.strip().replace(' ', ' & '))
             s_q_books = db.execute(
                 'SELECT public.book.*, '
                 'array_agg(public.author.name) '
@@ -110,17 +109,18 @@ def search():
                 'WHERE isbn LIKE :search_like '
                 'OR to_tsvector(title) @@ to_tsquery(:search) '
                 'GROUP BY public.book.id',
-                {'search': form.search.data,
+                {'search': form.search.data.strip().replace(' ', ' & '),
                  'search_like': '%'+form.search.data+'%'}
             ).fetchall()
 
             results = (s_q_books, s_q_authors)
+            print(results)
             return render_template('search.html', form=form, results=results)
 
     if not form.validate_on_submit():
         flash(f"validation error: {form.errors}", 'debug')
 
-    return render_template('search.html', form=form)
+    return render_template('search.html', form=form, results=None)
 
 
 @app.route('/book/<string:book_isbn>', methods=['GET', 'POST'])
