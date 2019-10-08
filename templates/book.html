@@ -6,22 +6,22 @@
 
 {% block content %}
 <section class="section-border border-primary">
-  <div class="container d-flex flex-column">
-    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
+  <div class="d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
       <div class="col-12 col-lg-8">
         <div class="min-vh-100 d-flex flex-column justify-content-around">
            <p class="display-1 text-center font-weight-bold">
            {{ book_json.title }}
            </p>
-
-         <p class="text-uppercase text-center text-muted font-weight-light display-5">{{ book_json.author }} - {{ book_json.year }} - {{ book_json.isbn }}</p>
+         <p class="text-uppercase text-center text-muted font-weight-light display-5">
+           <a href="#">{{ book_json.author }}</a> - {{ book_json.year }} - {{ book_json.isbn }}</p>
         </div>
         <hr>
 
         <div id="reviews" class="d-flex flex-column justify-content-center">
           <div style="margin-top: 25%">
             {% if book_json.average_score %}
-            <p class="ml-md-5 ml-2  h5">
+            <p class="ml-md-5 ml-3 font-serif rfs">
               <span>Average score: {{ book_json.average_score }} from {{ book_json.review_count }} reviews.</span>
             {% endif %}
             {% if gr_api_json %}
@@ -56,7 +56,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">write your review</h5>
+                <h3 class="modal-title font-serif" id="exampleModalLabel"><mark>write your review</mark></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -67,22 +67,17 @@
               <div class="modal-body">
                 <div class="input-group">
                 <!-- TODO character counter -->
-                {{ nolabel_field(form.review, class="form-control", placeholder="review", rows="6") }}
+                {{ nolabel_field(form.review, class="form-control font-serif", placeholder="review", rows="6") }}
                 </div>
                 <br>
                 <div class="form-group">
-                  <div class="input-group-prepend">
-                    <label class="input-group-text" for="">Rating</label>
-                    {{ nolabel_field(form.rating, class="form-control") }}
+                  <div class="input-group-prepend d-flex justify-content-around">
+                    <label class="h3 mt-1" font-serif for="rating"><mark>rating:</mark></label>
+                    {{ nolabel_field(form.rating, class="form-control w-25 font-serif") }}
+                    <button class="btn btn-outline-dark btn-sm" type="submit">submit</button>
                   </div>
                 </div>
               </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark btn-sm" data-dismiss="modal">close</button>
-                <button class="btn btn-outline-dark btn-sm" type="submit">submit</button>
-              </div>
-
               </form>
             </div>
           </div>
@@ -95,9 +90,9 @@
         <div class="min-vh-100 d-flex flex-column justify-content-start">
         {% for r in reviews %}
           {% if r.review %}
-          <div class="mt-5">
-          <blockquote class="blockquote display-5">
-            <cite class="mb-0">{{ r.review }}</cite>
+          <div class="m-5">
+          <blockquote class="blockquote">
+            <cite class="mb-0 font-serif">{{ r.review }}</cite>
             <footer class="blockquote-footer ml-3"><em>{{ r.user }}</em></footer>
           </blockquote>
           </div>

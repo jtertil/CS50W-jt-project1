@@ -2,19 +2,41 @@
 
 {% block content %}
 <section class="section-border border-primary">
-  <div class="container d-flex flex-column">
-    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
-      <div class="col-12 col-lg-8">
-        <div class="min-vh-100 d-flex flex-column justify-content-around">
-           <p class="display-1 text-center font-weight-bold">
-              Some random title
-           </p>
-          <p class="text-uppercase text-center text-muted font-weight-light display-5">
-            Info about page.
-          </p>
+  <div class="d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
+      <div class="col-12">
+        <div class="d-flex flex-column justify-content-around">
+          <div>
+            <p class="text-center font-weight-light display-title">Did you read...</p>
+            <p id="replaceStrings" class="display-title text-center font-weight-bold"></p>
+            <p class="text-center font-serif h5 mt-5">
+              <mark>Sign in, and discover 5ooo books!</mark>
+            </p>
+          </div>
       </div>
     </div>
     </div> <!-- / .row -->
   </div> <!-- / .container -->
 </section>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/typeit@6/dist/typeit.min.js" /></script>
+
+<script defer>
+    new TypeIt('#replaceStrings', {
+    strings: {{ rnd_titles|tojson }},
+    speed: 150,
+    nextStringDelay: 5000,
+    deleteSpeed: 100,
+    lifeLike: true,
+    cursor: true,
+    loop:true,
+    breakLines: false,
+    waitUntilVisible: true
+    }).go();
+</script>
+
 {% endblock %}

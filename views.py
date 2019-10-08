@@ -11,7 +11,17 @@ from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+
+    q = db.execute(
+        'SELECT title '
+        'FROM public.book '
+        'ORDER BY random() '
+        'LIMIT 15;').fetchall()
+
+    rnd_titles = [t[0] + '?' for t in q]
+    print(rnd_titles)
+
+    return render_template('index.html', rnd_titles=rnd_titles)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -25,7 +35,6 @@ def register():
         ).fetchone()
 
         if u:
-            flash('user already exist', 'debug')
             flash(f'username {form.login.data} not available', 'alert')
             return render_template('register.html', form=form)
 
@@ -47,14 +56,13 @@ def register():
             for err in form.errors[field]:
                 flash(f'{field}: {err}', 'alert')
 
-        flash(form.errors, 'debug')
         return render_template('register.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
+    session['user'] = None
     if request.method == 'POST' and form.validate_on_submit():
         u = db.execute(
             'SELECT * FROM public.user '
@@ -74,7 +82,6 @@ def login():
         elif check_password_hash(u[2], request.form['passw']):
             session['user'] = request.form['login']
             session['user_id'] = u.id
-            flash(f"logged as {session['user']}", 'debug')
             return redirect(url_for('search'))
 
     else:
@@ -88,7 +95,6 @@ def login():
 @login_only
 def logout():
     session['user'] = None
-    flash(f"logged as {session['user']}", 'debug')
     return redirect(url_for('index'))
 
 

@@ -3,35 +3,35 @@
 
 {% block content %}
 <section class="section-border border-primary">
-  <div class="container d-flex flex-column">
-    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
-      <div class="col-12 col-md-5 col-lg-4 py-8 py-md-11" style="margin-top: -10%">
+  <div class="d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
+      <div class="col-12 col-md-5 col-lg-4 p-3">
 
         <!-- Heading -->
         <h1 class="mb-0 font-weight-bold text-center">
-          Sign up
+          Sign Up
         </h1>
 
         <!-- Text -->
-        <p class="mb-6 text-center text-muted">
-          Welcome aboard.
+        <p class="mb-3 text-center font-serif">
+          <mark>Welcome aboard!</mark>
         </p>
 
         <!-- Form -->
-        <form class="mb-6" action="/register" method="post">
+        <form class="mb-5" action="/register" method="post">
         {{ form.csrf_token }}
 
           <!-- Login -->
-          <div class="form-group">
-            <label for="login">
+          <div class="form-group mb-2">
+            <label class="text-muted" for="login">
               login
             </label>
             {{ nolabel_field(form.login, class="form-control") }}
           </div>
 
           <!-- Password -->
-          <div class="form-group">
-            <label for="passw">
+          <div class="form-group mb-2">
+            <label class="text-muted" for="passw">
               password
             </label>
             {{ nolabel_field(form.passw, class="form-control") }}
@@ -39,7 +39,7 @@
 
           <!-- Password confirmation-->
           <div class="form-group mb-5">
-            <label for="passw_c">
+            <label class="text-muted" for="passw_c">
               password confirmation
             </label>
             {{ nolabel_field(form.passw_c, class="form-control") }}
@@ -47,14 +47,16 @@
 
           <!-- Submit -->
           <button class="btn btn-block btn-outline-dark btn-sm" type="submit">
-            Sign up
+            Sign Up
           </button>
         </form>
 
         <!-- Text -->
-        <p class="mb-0 font-size-sm text-center text-muted">
-          Already have an account? <a href="{{ url_for('login')}}">Log in</a>.
+        <p class="mb-0 text-center font-serif">
+          Already have an account? <a href="{{ url_for('login')}}">Sign In</a>.
         </p>
+
+
       </div> <!-- /  -->
     </div> <!-- / .row -->
   </div> <!-- / .container -->

@@ -3,27 +3,30 @@
 
 {% block content %}
 <section class="section-border border-primary">
-  <div class="container d-flex flex-column">
-    <div class="row align-items-center justify-content-center no-gutters min-vh-100">
-      <div class="col-12 col-md-5 col-lg-4 py-8 py-md-11" style="margin-top: -10%">
+  <div class="d-flex flex-column">
+
+    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
+
+
+      <div class="col-12 col-md-5 col-lg-4 p-3">
 
         <!-- Heading -->
         <h1 class="mb-0 font-weight-bold text-center">
-          Sign in
+          Sign In
         </h1>
 
         <!-- Text -->
-        <p class="mb-6 text-center text-muted">
-          Happy to see you again.
+        <p class="mb-3 text-center font-serif">
+          <mark>Happy to see you again.</mark>
         </p>
 
         <!-- Form -->
-        <form class="mb-6" action="/login" method="post">
+        <form class="mb-5" action="/login" method="post">
         {{ form.csrf_token }}
 
           <!-- Login -->
-          <div class="form-group">
-            <label for="login">
+          <div class="mb-2 form-group">
+            <label class="text-muted" for="login">
               login
             </label>
             {{ nolabel_field(form.login, class="form-control") }}
@@ -31,7 +34,7 @@
 
           <!-- Password -->
           <div class="form-group mb-5">
-            <label for="passw">
+            <label class="text-muted" for="passw">
               password
             </label>
             {{ nolabel_field(form.passw, class="form-control") }}
@@ -39,13 +42,13 @@
 
           <!-- Submit -->
           <button class="btn btn-block btn-outline-dark btn-sm" type="submit">
-            Sign in
+            Sign In
           </button>
         </form>
 
         <!-- Text -->
-        <p class="mb-0 font-size-sm text-center text-muted">
-          <a href="{{ url_for('register')}}">Sign up</a> if you don't have an account yet..
+        <p class="mb-0 font-size-sm text-center font-serif">
+          <a href="{{ url_for('register')}}">Sign Up</a> if you don't have an account yet.
         </p>
 
       </div>

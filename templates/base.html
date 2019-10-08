@@ -15,6 +15,49 @@
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
         crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Oranienbaum&display=swap" rel="stylesheet">
+
+  <style>
+  .font-serif {
+    font-family: 'Oranienbaum', serif;
+  }
+
+  .display-title {
+    font-size: 7vw;
+  }
+
+  @media (min-width: 992px) {
+    .rfs {
+      font-size: 4vw;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .rfs {
+      font-size: 5vw;
+    }
+  }
+
+
+  mark {
+    display: inline-block;
+    background-color: #94dc358c;
+    line-height: 0.1;
+    padding-top: 0.35em;
+    padding-left: 0.5em;
+    transform: rotate(-1deg)
+  }
+
+  a {
+  color: #94dc35;
+  }
+
+  a:hover {
+  color: #94dc358c;
+  }
+
+  </style>
+
 
   {% block styles %}
   {% endblock %}
@@ -22,10 +65,43 @@
   <title>{% block title %}{% endblock %}</title>
 
 </head>
+
+
+<div class="p-3 bg-light">
+  <!-- alerts -->
+  {% with alerts = get_flashed_messages(category_filter=["alert"]) %}
+  {% if alerts %}
+  {% for alert in alerts %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{alert}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  {% with alerts = get_flashed_messages(category_filter=["success"]) %}
+  {% if alerts %}
+  {% for alert in alerts %}
+
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{alert | safe}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  </div>
+
 <body>
 <!-- navbar -->
-<nav class="navbar navbar-expand-sm navbar-light bg-light sticky-top">
-  <a class="navbar-brand" href="/">Books</a>
+<!--TODO navbar refactor-->
+<nav class="navbar navbar-expand navbar-light bg-light" style="height: 5vh !important; padding-top: 2vh;">
+  <a class="navbar-brand" href="/"><h3 class="font-serif"><mark>books</mark></h3></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarNav" aria-controls="navbarNav"
           aria-expanded="false" aria-label="Toggle navigation">
@@ -38,64 +114,31 @@
         <a class="nav-link" href="/search" tabindex="-1">Search</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/logout" tabindex="-1">Log out</a>
+        <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
       </li>
       {% else %}
       <li class="nav-item">
-        <a class="nav-link" href="/register">Sign up</a>
+        <a class="nav-link" href="/register">Sign Up</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/login">Sign in</a>
+        <a class="nav-link" href="/login">Sign In</a>
       </li>
       {% endif %}
     </ul>
   </div>
 </nav>
 
-<!-- alerts -->
-{% with alerts = get_flashed_messages(category_filter=["alert"]) %}
-{% if alerts %}
-{% for alert in alerts %}
 
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-  {{alert}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
-
-{% with alerts = get_flashed_messages(category_filter=["success"]) %}
-{% if alerts %}
-{% for alert in alerts %}
-
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-  {{alert | safe}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
 
 {% block content %}
 {% endblock %}
 
-<h5>Debug:</h5>
-{% with messeges = get_flashed_messages(category_filter=["debug"]) %}
-{% if messeges %}
-{% for message in messeges %}
-<ul>
-  <li>{{ message }}</li>
-</ul>
-{% endfor %}
-{% endif %}
-{% endwith %}
+<div class="bg-light sticky-bottom d-flex" style="height: 5vh !important;">
+  <p class="text-center pb-3 m-auto font-serif">
+    I'm <a href="#">Jacek</a> and this is my <a href="#">CS50W</a> project.
+  </p>
+</div>
 
-<!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -106,6 +149,11 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+<!-- Optional JavaScript -->
+{% block js %}
+{% endblock %}
+
 </body>
 </html>
 
