@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-border border-primary">
+  <div class="d-flex flex-column">
+    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
+      <div class="col-12">
+        <div class="d-flex flex-column justify-content-around">
+          <div class="container">
+            <p class="text-center font-weight-light display-title">Oh no!</p>
+            {% if http_err %}
+            <p class="display-title text-center font-weight-bold" style="transform: rotate(-170deg">
+              <mark>{{ http_err.code }}</mark>
+            </p>
+            <p class="text-center font-serif h5 mt-5">
+              {{ http_err.description }} <a href="#">Back to home</a>.
+            </p>
+            {% else %}
+            <p class="text-center font-serif h5 mt-5">
+              Something goes wrong. <a href="#">Back to home</a>.
+            </p>
+            {% endif %}
+
+          </div>
+      </div>
+    </div>
+    </div> <!-- / .row -->
+  </div> <!-- / .container -->
+</section>
+{% endblock %}

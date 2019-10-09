@@ -1,9 +1,11 @@
+from json import JSONDecodeError
+
 import requests
 
 from flask import request, render_template, redirect, url_for, session,\
     flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.exceptions import abort
+from werkzeug.exceptions import abort, HTTPException, BadRequest
 
 from application import app, db, is_isbn_code, login_only, gr_api_key
 from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
@@ -113,7 +115,6 @@ def search():
                 {'search_like': '%'+form.search.data+'%'}
             ).fetchall()
 
-            print(form.search.data.strip().replace(' ', ' & '))
             s_q_books = db.execute(
                 'SELECT public.book.*, '
                 'array_agg(public.author.name) '
@@ -130,7 +131,6 @@ def search():
             ).fetchall()
 
             results = (s_q_books, s_q_authors)
-            print(results)
             return render_template('search.html', form=form, results=results)
 
     if not form.validate_on_submit():
@@ -147,17 +147,22 @@ def search():
 def book(book_isbn):
     form = ReviewForm()
 
-    try:
-        book_json = requests.get(
-            f'http://localhost:5000/api/{book_isbn}').json()
-    except requests.exceptions.RequestException as err:
-        abort(404)
+    r_api = requests.get(f'http://localhost:5000/api/{book_isbn}')
+    if r_api.status_code != 200:
+        return abort(404)
 
     try:
-        gr_api_json = requests.get(
+        book_json = r_api.json()
+    except JSONDecodeError:
+        return abort(500)
+
+    r_gr_api = requests.get(
             "https://www.goodreads.com/book/review_counts.json",
-            params={"key": gr_api_key, "isbns": book_isbn}).json()
-    except requests.exceptions.RequestException:
+            params={"key": gr_api_key, "isbns": book_isbn})
+
+    try:
+        gr_api_json = r_gr_api.json()
+    except JSONDecodeError:
         gr_api_json = None
 
     book_id = db.execute(
@@ -194,13 +199,13 @@ def book(book_isbn):
 
     reviews = []
     already_review = False
-    for r in r_q:
-        if r[5] == session['user']:
+    for r_api in r_q:
+        if r_api[5] == session['user']:
             already_review = True
-            form.review.default = r[4]
-            form.rating.default = int(r[3])
+            form.review.default = r_api[4]
+            form.rating.default = int(r_api[3])
             form.process()
-        reviews.append({'user': r[5], 'rating': r[3], 'review': r[4]})
+        reviews.append({'user': r_api[5], 'rating': r_api[3], 'review': r_api[4]})
 
     flash(f"validation error: {form.errors}", 'debug')
     return render_template(
@@ -211,3 +216,12 @@ def book(book_isbn):
         reviews=reviews,
         already_review=already_review
     )
+
+
+@app.errorhandler(Exception)
+def error(err):
+    if isinstance(err, HTTPException):
+        return render_template('error.html', http_err=err), err.code
+
+    # non-HTTP exceptions
+    return render_template('error.html')
