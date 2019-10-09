@@ -10,8 +10,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 # Set up app
 app = Flask(__name__)
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['DEBUG'] = True
 
 # Error Log:
 if not app.debug:

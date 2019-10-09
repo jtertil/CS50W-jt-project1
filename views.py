@@ -19,8 +19,6 @@ def index():
         'LIMIT 15;').fetchall()
 
     rnd_titles = [t[0] + '?' for t in q]
-    print(rnd_titles)
-
     return render_template('index.html', rnd_titles=rnd_titles)
 
 
@@ -152,16 +150,14 @@ def book(book_isbn):
     try:
         book_json = requests.get(
             f'http://localhost:5000/api/{book_isbn}').json()
-    # TODO exception to broad
-    except:
+    except requests.exceptions.RequestException as err:
         abort(404)
 
     try:
         gr_api_json = requests.get(
             "https://www.goodreads.com/book/review_counts.json",
             params={"key": gr_api_key, "isbns": book_isbn}).json()
-    # TODO exception to broad
-    except:
+    except requests.exceptions.RequestException:
         gr_api_json = None
 
     book_id = db.execute(
