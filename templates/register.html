@@ -2,63 +2,61 @@
 {% from "_formhelpers.html" import nolabel_field %}
 
 {% block content %}
-<section class="section-border border-primary">
-  <div class="d-flex flex-column">
-    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
-      <div class="col-12 col-md-5 col-lg-4 p-3">
 
-        <!-- Heading -->
-        <h1 class="mb-0 font-weight-bold text-center">
-          Sign Up
-        </h1>
+<div class="row justify-content-center p-0 m-0">
+  <div class="col-11 col-sm-8 col-md-6 col-lg-4 col-xl-3">
 
-        <!-- Text -->
-        <p class="mb-3 text-center font-serif">
-          <mark>Welcome aboard!</mark>
-        </p>
+    <!-- Heading -->
+    <h1 class="mb-0 font-weight-bold text-center">
+      Sign Up
+    </h1>
 
-        <!-- Form -->
-        <form class="mb-5" action="/register" method="post">
-        {{ form.csrf_token }}
+    <!-- Text -->
+    <p class="mb-3 text-center font-serif">
+      <mark>Welcome aboard!</mark>
+    </p>
 
-          <!-- Login -->
-          <div class="form-group mb-2">
-            <label class="text-muted" for="login">
-              login
-            </label>
-            {{ nolabel_field(form.login, class="form-control") }}
-          </div>
+    <!-- Form -->
+    <form class="mb-5" action="/register" method="post">
+    {{ form.csrf_token }}
 
-          <!-- Password -->
-          <div class="form-group mb-2">
-            <label class="text-muted" for="passw">
-              password
-            </label>
-            {{ nolabel_field(form.passw, class="form-control") }}
-          </div>
+      <!-- Login -->
+      <div class="form-group mb-2">
+        <label class="text-muted" for="login">
+          login
+        </label>
+        {{ nolabel_field(form.login, class="form-control") }}
+      </div>
 
-          <!-- Password confirmation-->
-          <div class="form-group mb-5">
-            <label class="text-muted" for="passw_c">
-              password confirmation
-            </label>
-            {{ nolabel_field(form.passw_c, class="form-control") }}
-          </div>
+      <!-- Password -->
+      <div class="form-group mb-2">
+        <label class="text-muted" for="passw">
+          password
+        </label>
+        {{ nolabel_field(form.passw, class="form-control") }}
+      </div>
 
-          <!-- Submit -->
-          <button class="btn btn-block btn-outline-dark btn-sm" type="submit">
-            Sign Up
-          </button>
-        </form>
+      <!-- Password confirmation-->
+      <div class="form-group mb-5">
+        <label class="text-muted" for="passw_c">
+          password confirmation
+        </label>
+        {{ nolabel_field(form.passw_c, class="form-control") }}
+      </div>
 
-        <!-- Text -->
-        <p class="mb-0 text-center font-serif">
-          Already have an account? <a href="{{ url_for('login')}}">Sign In</a>.
-        </p>
+      <!-- Submit -->
+      <button class="btn btn-block btn-outline-dark btn-sm" type="submit">
+        Sign Up
+      </button>
 
+    </form>
 
-      </div> <!-- /  -->
-    </div> <!-- / .row -->
-  </div> <!-- / .container -->
-</section>
+    <!-- Text -->
+    <p class="mb-0 text-center font-serif">
+      Already have an account? <a href="{{ url_for('login')}}">Sign In</a>.
+    </p>
+
+  </div>
+</div>
+
 {% endblock %}

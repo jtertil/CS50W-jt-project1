@@ -2,107 +2,102 @@
 {% from "_formhelpers.html" import nolabel_field %}
 
 {% block content %}
-<section class="section-border border-primary">
-  <div class="d-flex flex-column">
-    <div class="row align-items-center justify-content-center no-gutters"  style="min-height: 90vh !important; background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover; background-repeat: no-repeat;">
-      <div class="col-12 col-lg-8">
-        <div class="min-vh-100 d-flex flex-column justify-content-center p-3" style="margin-top: -20%">
 
-          <!-- Heading -->
-          <h1 class="mb-0 font-weight-bold text-center">
-            Go On!
-          </h1>
+ <div class="row justify-content-center p-0 m-0">
+  <div class="col-11 col-md-8 col-lg-6 col-xl-4 d-flex flex-column justify-content-center">
 
-          <!-- Text -->
+    <!-- Heading -->
+    <h1 class="mb-0 font-weight-bold text-center">
+      Go On!
+    </h1>
+
+    <!-- Text -->
+    <p class="mb-5 text-center font-serif">
+      <mark>5ooo books are waiting for you</mark>
+    </p>
+
+    <!-- Form -->
+    <form action="/search#results" method="post">
+      {{ form.csrf_token }}
+
+      <!-- Search-->
+      <div class="input-group">
+        {{ nolabel_field(form.search, class="form-control", placeholder="title, author or isbn") }}
+        <div class="input-group-append">
+          <button class="btn btn-outline-dark btn-sm" type="submit">search</button>
+        </div>
+      </div>
+
+    </form>
+
+    {% if results and not results[0] and not results[1] %}
+    <h4 class="mb-0 font-weight-bold text-center">
+      Sorry no results this time..
+    </h4>
+    {% endif %}
+
+  </div>
+ </div> <!-- search form row -->
+
+
+  <!-- Results -->
+  {% if results[0] or results[1] %}
+  <div id="results" class="container">
+   <div class="row justify-content-center p-0 m-0">
+      <div id="results-books" class="w-100 d-flex flex-column justify-content-around">
+        {% if results[0] %}
+        <!-- Books -->
+        <div class="m-5">
+          <h1 class="mb-0 mt-5 font-weight-bold text-center">books results</h1>
           <p class="mb-5 text-center font-serif">
-            <mark>5ooo books are waiting for you</mark>
+            <mark>click details for more info</mark>
           </p>
-
-          <!-- Form -->
-          <form action="/search#results" method="post">
-            {{ form.csrf_token }}
-
-            <!-- Search-->
-            <div class="input-group">
-              {{ nolabel_field(form.search, class="form-control", placeholder="title, author or isbn") }}
-              <div class="input-group-append">
-                <button class="btn btn-outline-dark btn-sm" type="submit">search</button>
-              </div>
-            </div>
-          </form>
-
-          {% if results and not results[0] and not results[1] %}
-            <h4 class="mb-0 font-weight-bold text-center">
-              Sorry no results this time..
-            </h4>
-          {% endif %}
-
         </div>
 
-        <!-- Results -->
-        {% if results[0] or results[1] %}
-        <div id="results" class="min-vh-100 p-3">
-          <div id="results-books" class=" d-flex flex-column justify-content-around">
-              {% if results[0] %}
-              <div class="m-5">
-                <!-- Books -->
-                <h1 class="mb-0 font-weight-bold text-center">
-                  books results
-                </h1>
-                <p class="mb-5 text-center font-serif">
-                  <mark>click details for more info</mark>
-                </p>
-                <hr>
-              </div>
-
-                {% for r in results[0] %}
-                <div class="w-100 border border-muted p-2 mb-3 d-flex justify-content-between">
-                  <div>
-                    <h3 class="font-weight-bold">{{ r.title }}</h3>
-                    <em><p class="ml-4 text-muted">by {% for a in r[4] %}{{ a }}, {% endfor %}{{ r.year }}</p></em>
-
-                  </div>
-                  <div class="d-flex flex-column justify-content-end">
-                    <a href="/book/{{ r.isbn }}" class="btn btn-outline-dark btn-sm" role="button" aria-pressed="true">details</a>
-                  </div>
-                </div>
-                {% endfor %}
-                {% endif %}
-          </div>
-
-          <div id="results-authors" class=" d-flex flex-column justify-content-around">
-              <div class="m-5">
-              {% if results[1] %}
-               <!-- Authors -->
-                <h1 class="mb-0 font-weight-bold text-center">
-                  authors results
-                </h1>
-                <p class="mb-5 text-center font-serif">
-                  <mark>click details to check author books</mark>
-                </p>
-                <hr>
-              </div>
-
-              <div class="d-flex flex-wrap justify-content-around">
-                {% for r in results[1] %}
-                <div class="card col-5 col-md-3 m-2 p-0">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="placeholder" style="border-radius: 50%; width: 80%; margin: auto; padding: 5%">
-                  <div class="card-body d-flex flex-column">
-                    <h6 class="card-title text-center p-3">{{ r.name }}</h6>
-                    <a href="/author/{{ r.id }}" class="btn btn-outline-dark btn-sm mt-auto">details</a>
-                  </div>
-                </div>
-                {% endfor %}
-
-              </div>
+        {% for r in results[0] %}
+        <div class="w-100 border border-muted p-2 mb-3 d-flex justify-content-between">
+          <div>
+            <h3 class="font-weight-bold">{{ r.title }}</h3>
+            <em><p class="ml-4 text-muted">by {% for a in r[4] %}{{ a }}, {% endfor %}{{ r.year }}</p></em>
 
           </div>
-              {% endif %}
+          <div class="d-flex flex-column justify-content-end">
+            <a href="/book/{{ r.isbn }}" class="btn btn-outline-dark btn-sm" role="button" aria-pressed="true">details</a>
           </div>
-          {% endif %}
         </div>
-      </div> <!-- /  -->
-    </div> <!-- / .row -->
-  </div> <!-- / .container -->
-</section>
+        {% endfor %}
+        {% endif %}
+      </div>
+   </div> <!--results books row-->
+
+  <div class="row justify-content-center p-0 m-0">
+    <div id="results-authors" class="w-100 d-flex flex-column justify-content-around">
+      <div class="m-5">
+      {% if results[1] %}
+       <!-- Authors -->
+        <h1 class="mb-0 mt-5 font-weight-bold text-center">
+          authors results
+        </h1>
+        <p class="mb-5 text-center font-serif">
+          <mark>click details to check author books</mark>
+        </p>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-around">
+        {% for r in results[1] %}
+        <div class="card col-5 col-md-3 m-2 p-0">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="placeholder" style="border-radius: 50%; width: 80%; margin: auto; padding: 5%">
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title text-center p-3">{{ r.name }}</h6>
+            <a href="/author/{{ r.id }}" class="btn btn-outline-dark btn-sm mt-auto">details</a>
+          </div>
+        </div>
+        {% endfor %}
+       </div>
+      </div>
+      {% endif %}
+  </div> <!--results authors row-->
+
+</div> <!-- results  container-->
+{% endif %}
 {% endblock %}

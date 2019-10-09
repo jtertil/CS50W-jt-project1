@@ -57,6 +57,14 @@
   color: #94dc358c;
   }
 
+  .navbar{
+    height: 4em;
+   }
+
+   footer{
+    height: 4em;
+   }
+
   </style>
 
   {% block styles %}
@@ -67,69 +75,44 @@
 </head>
 
 
-<div class="p-3 bg-light">
-  <!-- alerts -->
-  {% with alerts = get_flashed_messages(category_filter=["alert"]) %}
-  {% if alerts %}
-  {% for alert in alerts %}
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    {{alert}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-
-  {% with alerts = get_flashed_messages(category_filter=["success"]) %}
-  {% if alerts %}
-  {% for alert in alerts %}
-
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{alert | safe}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-  </div>
-
 <body>
-<!-- navbar -->
-<nav class="navbar navbar-light bg-light" style="height: 5vh !important; padding-top: 2vh;">
-  <a class="navbar-brand" href="/"><h3 class="font-serif"><mark>books</mark></h3></a>
-  <ul class="nav justify-content-end">
-    {% if session['user'] %}
-    <li class="nav-item">
-      <a class="nav-link" href="/search" tabindex="-1">Search</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
-    </li>
-    {% else %}
-    <li class="nav-item">
-      <a class="nav-link" href="/register">Sign Up</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/login">Sign In</a>
-    </li>
-    {% endif %}
-  </ul>
-</nav>
+<div class="container-fluid min-vh-100 p-0 m-0 d-flex flex-column justify-content-between" style="background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover;">
+
+  <!-- navbar -->
+  <nav class="navbar navbar-light bg-light sticky-top">
+    <a class="navbar-brand" href="/"><h3 class="font-serif"><mark>books</mark></h3></a>
+    <ul class="nav justify-content-end">
+      {% if session['user'] %}
+      <li class="nav-item">
+        <a class="nav-link" href="/search" tabindex="-1">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="/register">Sign Up</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Sign In</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <section class="m-0 p-0">
+    {% block content %}
+    {% endblock %}
+  </section>
 
 
-{% block content %}
-{% endblock %}
+  <footer class="bg-light d-flex">
+    <p class="text-center m-auto font-serif">
+      I'm <a href="#">Jacek</a> and this is my <a href="#">CS50W</a> project.
+    </p>
+  </footer>
 
-<div class="bg-light sticky-bottom d-flex" style="height: 5vh !important;">
-  <p class="text-center pb-5 m-auto font-serif">
-    I'm <a href="#">Jacek</a> and this is my <a href="#">CS50W</a> project.
-  </p>
 </div>
-
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
