@@ -30,7 +30,7 @@ def api(book_isbn):
             'WHERE id = :author_id',
             {'author_id': author_id}
         ).first()
-        authors.append(q_a[0])
+        authors.append({'id': author_id, 'name': q_a[0]})
 
     # query db to get review count
     r_c = db.execute(
@@ -45,7 +45,7 @@ def api(book_isbn):
     ).fetchone()
 
     book_json = {'title': book.title,
-                 'author': ", ".join(authors),
+                 'author': authors,
                  'isbn': book.isbn,
                  'year': book.year,
                  "review_count": r_c[0],

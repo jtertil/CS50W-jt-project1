@@ -5,7 +5,7 @@ import requests
 from flask import request, render_template, redirect, url_for, session,\
     flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.exceptions import abort, HTTPException, BadRequest
+from werkzeug.exceptions import abort, HTTPException
 
 from application import app, db, is_isbn_code, login_only, gr_api_key
 from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
@@ -205,7 +205,8 @@ def book(book_isbn):
             form.review.default = r_api[4]
             form.rating.default = int(r_api[3])
             form.process()
-        reviews.append({'user': r_api[5], 'rating': r_api[3], 'review': r_api[4]})
+        reviews.append(
+            {'user': r_api[5], 'rating': r_api[3], 'review': r_api[4]})
 
     flash(f"validation error: {form.errors}", 'debug')
     return render_template(
