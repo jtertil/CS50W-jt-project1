@@ -100,32 +100,25 @@
 <body>
 <!-- navbar -->
 <!--TODO navbar refactor-->
-<nav class="navbar navbar-expand navbar-light bg-light" style="height: 5vh !important; padding-top: 2vh;">
+<nav class="navbar navbar-light bg-light" style="height: 5vh !important; padding-top: 2vh;">
   <a class="navbar-brand" href="/"><h3 class="font-serif"><mark>books</mark></h3></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse"
-          data-target="#navbarNav" aria-controls="navbarNav"
-          aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      {% if session['user'] %}
-      <li class="nav-item">
-        <a class="nav-link" href="/search" tabindex="-1">Search</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
-      </li>
-      {% else %}
-      <li class="nav-item">
-        <a class="nav-link" href="/register">Sign Up</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/login">Sign In</a>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
+  <ul class="nav justify-content-end">
+    {% if session['user'] %}
+    <li class="nav-item">
+      <a class="nav-link" href="/search" tabindex="-1">Search</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link" href="/register">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Sign In</a>
+    </li>
+    {% endif %}
+  </ul>
 </nav>
 
 
