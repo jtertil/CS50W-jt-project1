@@ -52,6 +52,30 @@ class TestViews(unittest.TestCase):
         r = self.app.post('/search')
         self.assertEqual(302, r.status_code)
 
+    def test_book_get_response_empty(self):
+        r = self.app.get('/book')
+        self.assertEqual(404, r.status_code)
+
+    def test_book_get_response(self):
+        r = self.app.get('/book/0380795272')
+        self.assertEqual(302, r.status_code)
+
+    def test_book_post_response(self):
+        r = self.app.post('/book/0380795272')
+        self.assertEqual(302, r.status_code)
+
+    def test_author_get_response_empty(self):
+        r = self.app.get('/author')
+        self.assertEqual(404, r.status_code)
+
+    def test_author_get_response(self):
+        r = self.app.get('/author/1')
+        self.assertEqual(302, r.status_code)
+
+    def test_author_post_response(self):
+        r = self.app.post('/author/0380795272')
+        self.assertEqual(405, r.status_code)
+
 
 class TestHelpers(unittest.TestCase):
     def setUp(self):

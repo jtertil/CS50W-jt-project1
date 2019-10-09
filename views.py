@@ -219,6 +219,12 @@ def book(book_isbn):
     )
 
 
+@app.route('/author/<string:author_id>', methods=['GET'])
+@login_only
+def author(author_id):
+    return author_id
+
+
 @app.errorhandler(Exception)
 def error(err):
     if isinstance(err, HTTPException):
