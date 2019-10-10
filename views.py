@@ -1,6 +1,7 @@
 from json import JSONDecodeError
-
 import requests
+import time
+from xml.etree.ElementTree import fromstring, ElementTree
 
 from flask import request, render_template, redirect, url_for, session,\
     flash
@@ -222,7 +223,52 @@ def book(book_isbn):
 @app.route('/author/<string:author_id>', methods=['GET'])
 @login_only
 def author(author_id):
-    return author_id
+
+    author = db.execute(
+        'SELECT * FROM public.author '
+        'WHERE id = :author_id ',
+        {'author_id': int(author_id)}
+    ).fetchone()
+
+    a_n = author.name
+    r = requests.get(
+        f'https://www.goodreads.com/api/author_url/'
+        f'{a_n}?key={gr_api_key}')
+
+    try:
+        tree = ElementTree(fromstring(r.text))
+        root = tree.getroot()
+        a_id = root[1].attrib['id']
+        time.sleep(1)
+        r = requests.get(
+            f'https://www.goodreads.com/author/show/'
+            f'{a_id}?format=xml&key={gr_api_key}')
+        tree = ElementTree(fromstring(r.text))
+        root = tree.getroot()
+        img_src = root[1][5].text
+        dsc = root[1][8].text
+
+    # TODO bare except
+    except:
+        img_src = None
+        dsc = None
+
+    a_books = db.execute(
+       'SELECT public.book.* '
+       'FROM public.book_author '
+       'JOIN public.book '
+       'ON public.book.id = public.book_author.book_id '
+       'WHERE author_id = :author_id '
+       'ORDER BY (year) DESC ',
+       {'author_id': int(author_id)}
+    ).fetchall()
+
+    return render_template(
+        'author.html',
+        author=author,
+        img_src=img_src,
+        dsc=dsc,
+        a_books=a_books)
 
 
 @app.errorhandler(Exception)
