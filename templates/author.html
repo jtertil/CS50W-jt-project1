@@ -7,18 +7,19 @@
 <div class="row align-items-center justify-content-center no-gutters">
   <div class="col-12 col-lg-8">
     <div class="min-vh-100 d-flex flex-column justify-content-around">
-       <p class="display-title text-center font-weight-bold">
-       {{ author.name }}
+       <p class="display-title  mt-5 pt-5 text-center font-weight-bold">
+       {{ a_q.name }}
        </p>
+         <p class="text-uppercase text-center text-muted font-weight-light display-5">
+           {{a_books|length}} book(s) by {{ a_q.name }} in database
+         </p>
+        </div>
+        <hr>
     </div>
   </div>
-</div>
 
-{% if dsc or img_src %}
-
+{% if dsc or a_q.author_ph_gr %}
 <div class="row align-items-center justify-content-center no-gutters">
-
-
 
   <div class="container min-vh-100">
 
@@ -26,16 +27,18 @@
       <h1 class="mb-0 mt-5 font-weight-bold text-center">
         informations
       </h1>
-      <p class="mb-5 text-center font-serif">
-        <mark>..from goodreads.com</mark>
-      </p>
+      <a href="https://www.goodreads.com/author/show/{{ a_q.author_id_gr }}" target="_blank">
+        <p class="mb-5 text-center font-serif">
+          <mark>..from goodreads.com</mark>
+        </p>
+      </a>
     </div>
 
     <div class="row">
-      {% if img_src %}
+      {% if a_q.author_ph_gr %}
       <div class="col-12 col-md-3 p-3 mx-auto text-center">
 
-        <img src="{{img_src}}" alt="author_photo" class="img-fluid" style="filter: grayscale(100%); max-height: 100%;">
+        <img src="{{a_q.author_ph_gr}}" alt="author_photo" class="img-fluid" style="filter: grayscale(100%); max-height: 100%;">
       </div>
       {% endif %}
 
@@ -56,7 +59,7 @@
   <div id="results-books" class="w-100 d-flex flex-column justify-content-around">
     <!-- Books -->
     <div class="m-5">
-      <h1 class="mb-0 mt-5 font-weight-bold text-center">{{ author.name }} books</h1>
+      <h1 class="mb-0 mt-5 font-weight-bold text-center">{{ a_q.name }} books</h1>
       <p class="mb-5 text-center font-serif">
         <mark>click details for more info</mark>
       </p>

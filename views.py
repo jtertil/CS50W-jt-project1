@@ -1,6 +1,5 @@
 from json import JSONDecodeError
 import requests
-import time
 from xml.etree.ElementTree import fromstring, ElementTree
 
 from flask import request, render_template, redirect, url_for, session,\
@@ -111,7 +110,12 @@ def search():
 
         else:
             s_q_authors = db.execute(
-                'SELECT * FROM public.author '
+                'SELECT *, '
+                'public.author_gr_map.author_id_gr, '
+                'public.author_gr_map.author_ph_gr '
+                'FROM public.author '
+                'LEFT JOIN public.author_gr_map '
+                'ON public.author.id = public.author_gr_map.author_id '
                 'WHERE LOWER(name) LIKE LOWER(:search_like) ',
                 {'search_like': '%'+form.search.data+'%'}
             ).fetchall()
@@ -224,33 +228,28 @@ def book(book_isbn):
 @login_only
 def author(author_id):
 
-    author = db.execute(
-        'SELECT * FROM public.author '
-        'WHERE id = :author_id ',
+    a_q = db.execute(
+        'SELECT public.author.id, '
+        'public.author.name, '
+        'public.author_gr_map.author_id_gr, '
+        'public.author_gr_map.author_ph_gr '
+        'FROM public.author '
+        'LEFT JOIN public.author_gr_map '
+        'ON public.author.id = public.author_gr_map.author_id '
+        'WHERE public.author.id = :author_id ',
         {'author_id': int(author_id)}
     ).fetchone()
 
-    a_n = author.name
-    r = requests.get(
-        f'https://www.goodreads.com/api/author_url/'
-        f'{a_n}?key={gr_api_key}')
-
     try:
-        tree = ElementTree(fromstring(r.text))
-        root = tree.getroot()
-        a_id = root[1].attrib['id']
-        time.sleep(1)
         r = requests.get(
             f'https://www.goodreads.com/author/show/'
-            f'{a_id}?format=xml&key={gr_api_key}')
+            f'{a_q.author_id_gr}?format=xml&key={gr_api_key}')
         tree = ElementTree(fromstring(r.text))
         root = tree.getroot()
-        img_src = root[1][5].text
         dsc = root[1][8].text
 
-    # TODO bare except
+    # # TODO bare except
     except:
-        img_src = None
         dsc = None
 
     a_books = db.execute(
@@ -265,8 +264,7 @@ def author(author_id):
 
     return render_template(
         'author.html',
-        author=author,
-        img_src=img_src,
+        a_q=a_q,
         dsc=dsc,
         a_books=a_books)
 
@@ -277,4 +275,5 @@ def error(err):
         return render_template('error.html', http_err=err), err.code
 
     # non-HTTP exceptions
+    print(err)
     return render_template('error.html')

@@ -5,9 +5,19 @@
   <div>
     <p class="text-center font-weight-light display-title">Did you read...</p>
     <p id="replaceStrings" class="display-title text-center font-weight-bold"></p>
-    <p class="text-center font-serif h5 mt-5">
-      <mark>Sign in, and discover 5ooo books!</mark>
-    </p>
+
+    <a href="{% if session['user'] %}{{url_for('search')}}{% else %}{{url_for('login')}}{% endif %}">
+      <p class="text-center font-serif h5 mt-5">
+        <mark>
+          {% if session['user'] %}
+          Start searching!
+          {% else %}
+          Sign in, and discover 5ooo books!
+          {% endif %}
+        </mark>
+      </p>
+    </a>
+
   </div>
 </div>
 

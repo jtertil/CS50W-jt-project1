@@ -8,7 +8,7 @@
     <div class="row align-items-center justify-content-center no-gutters">
       <div class="col-12 col-lg-8">
         <div class="min-vh-100 d-flex flex-column justify-content-around">
-           <p class="display-title text-center font-weight-bold">
+           <p class="display-title mt-5 pt-5 text-center font-weight-bold">
            {{ book_json.title }}
            </p>
          <p class="text-uppercase text-center text-muted font-weight-light display-5">
@@ -61,7 +61,7 @@
               <div class="modal-body">
                 <div class="input-group">
                 <!-- TODO character counter -->
-                {{ nolabel_field(form.review, class="form-control font-serif", placeholder="review", rows="6") }}
+                {{ nolabel_field(form.review, class="form-control font-serif", placeholder="Your review (optional).", rows="6") }}
                 </div>
                 <br>
                 <div class="form-group">

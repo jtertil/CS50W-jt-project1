@@ -9,11 +9,11 @@
           <div class="container">
             <p class="text-center font-weight-light display-title">Oh no!</p>
             {% if http_err %}
-            <p class="display-title text-center font-weight-bold" style="transform: rotate(-170deg">
+            <p class="display-title text-center font-weight-bold" style="transform: rotate(-170deg);">
               <mark>{{ http_err.code }}</mark>
             </p>
-            <p class="text-center font-serif h5 mt-5">
-              {{ http_err.description }} <a href="#">Back to home</a>.
+            <p class="text-center font-serif h5 mt-5 pt-5">
+              {{ http_err.description }} <a href="{{url_for('index')}}">Back to home</a>.
             </p>
             {% else %}
             <p class="text-center font-serif h5 mt-5">
