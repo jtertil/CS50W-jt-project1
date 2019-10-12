@@ -33,6 +33,8 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 # Set up Goodreads API
+if not os.getenv("GR_API_KEY"):
+    raise RuntimeError("GR_API_KEY is not set")
 gr_api_key = os.getenv("GR_API_KEY")
 
 
