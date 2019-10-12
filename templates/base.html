@@ -79,6 +79,7 @@
 <div class="container-fluid min-vh-100 p-0 m-0 d-flex flex-column justify-content-between" style="background-image: url({{ url_for('static', filename='img/bkg.svg') }}); background-size: cover;">
 
   <!-- navbar -->
+<div>
   <nav class="navbar navbar-light bg-light sticky-top">
     <a class="navbar-brand" href="/"><h3 class="font-serif"><mark>books</mark></h3></a>
     <ul class="nav justify-content-end font-serif">
@@ -87,18 +88,45 @@
         <a class="nav-link" href="/search" tabindex="-1">Search</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
+        <a class="nav-link" href="/logout" tabindex="-1">Log out</a>
       </li>
       {% else %}
       <li class="nav-item">
-        <a class="nav-link" href="/register">Sign Up</a>
+        <a class="nav-link" href="/register">Register</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/login">Sign In</a>
+        <a class="nav-link" href="/login">Log in</a>
       </li>
       {% endif %}
     </ul>
   </nav>
+  {% with messages = get_flashed_messages(category_filter=["alert"]) %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    {{ message|safe }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    {{ message|safe }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+</div>
+
+
 
   <section class="m-0 p-0">
     {% block content %}

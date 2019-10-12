@@ -2,6 +2,8 @@
 {% from "_formhelpers.html" import nolabel_field %}
 
 {% block styles %}
+<link href="{{ url_for('static', filename='css/star-rating.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/theme.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -47,6 +49,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -60,14 +63,15 @@
               {{ form.csrf_token }}
               <div class="modal-body">
                 <div class="input-group">
-                <!-- TODO character counter -->
-                {{ nolabel_field(form.review, class="form-control font-serif", placeholder="Your review (optional).", rows="6") }}
+
+                {{ nolabel_field(form.review, class="form-control font-serif", placeholder="Your review (optional).", rows="6", maxlength="300")}}
                 </div>
-                <br>
+
+                <p class="text-muted text-right"><small><span id="count">300</span> characters remaining</small></p>
                 <div class="form-group">
                   <div class="input-group-prepend d-flex justify-content-around">
                     <label class="h3 mt-1" font-serif for="rating"><mark>rating:</mark></label>
-                    {{ nolabel_field(form.rating, class="form-control w-25 font-serif") }}
+                    {{ nolabel_field(form.rating, id="book_rating") }}
                     <button class="btn btn-outline-dark btn-sm" type="submit">submit</button>
                   </div>
                 </div>
@@ -86,7 +90,10 @@
           <div class="m-5">
           <blockquote class="blockquote">
             <cite class="mb-0 font-serif">{{ r.review }}</cite>
-            <footer class="blockquote-footer ml-3"><em>{{ r.user }}</em></footer>
+            <footer class="blockquote-footer ml-3" >
+                <em>wrote {{ r.user }} and rated: </em>
+                <input class="rating-ro" type="text" value="{{ r.rating }}">
+            </footer>
           </blockquote>
           </div>
           {% endif %}
@@ -98,5 +105,39 @@
       </div>
     </div>
 {% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/star-rating.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/theme.min.js') }}" type="text/javascript"></script>
+<script defer>
+  $("#book_rating").rating({
+    size: 'sm',
+    theme: 'krajee-uni',
+    step: 1,
+    animate: false,
+    showCaption: false,
+    showClear: false,
+    hoverEnabled: false,
+    });
+
+    $(".rating-ro").rating({
+    size: 'xs',
+    theme: 'krajee-uni',
+    step: 1,
+    animate: false,
+    showCaption: false,
+    showClear: false,
+    hoverEnabled: false,
+    displayOnly: true,
+    });
+
+    $(".rating-container").css("display", "inline-flex")
+
+  $('textarea').keypress(function() {
+    let len = $(this).val().length;
+    let remain = 300-len;
+    $('#count').text(remain);
+  });
 
 
+</script>
+{% endblock %}

@@ -6,18 +6,17 @@
     <p class="text-center font-weight-light display-title">Did you read...</p>
     <p id="replaceStrings" class="display-title text-center font-weight-bold"></p>
 
-    <a href="{% if session['user'] %}{{url_for('search')}}{% else %}{{url_for('login')}}{% endif %}">
+    <a href="{% if session['user'] %}{{url_for('search')}}{% else %}{{url_for('register')}}{% endif %}">
       <p class="text-center font-serif h5 mt-5">
         <mark>
           {% if session['user'] %}
           Start searching!
           {% else %}
-          Sign in, and discover 5ooo books!
+          Register, and discover 5ooo books!
           {% endif %}
         </mark>
       </p>
     </a>
-
   </div>
 </div>
 
@@ -37,7 +36,7 @@
     cursor: true,
     loop:true,
     breakLines: false,
-    waitUntilVisible: true
+    waitUntilVisible: false
     }).go();
 </script>
 

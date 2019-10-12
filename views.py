@@ -71,12 +71,11 @@ def login():
         ).fetchone()
 
         if not u:
-            flash('no user', 'debug')
+            flash(f'There is no user: {form.login.data}', 'alert')
             return render_template('login.html', form=form)
 
         if not check_password_hash(u[2], request.form['passw']):
-            flash('no password match', 'debug')
-            flash(f'login and password no match', 'alert')
+            flash(f'Login and password must match', 'alert')
             return render_template('login.html', form=form)
 
         elif check_password_hash(u[2], request.form['passw']):
@@ -139,7 +138,6 @@ def search():
             return render_template('search.html', form=form, results=results)
 
     if not form.validate_on_submit():
-        flash(f"validation error: {form.errors}", 'debug')
         for field in form.errors:
             for err in form.errors[field]:
                 flash(f'{field}: {err}', 'alert')
@@ -213,7 +211,7 @@ def book(book_isbn):
         reviews.append(
             {'user': r_api[5], 'rating': r_api[3], 'review': r_api[4]})
 
-    flash(f"validation error: {form.errors}", 'debug')
+
     return render_template(
         'book.html',
         form=form,
