@@ -37,6 +37,10 @@ if not os.getenv("GR_API_KEY"):
     raise RuntimeError("GR_API_KEY is not set")
 gr_api_key = os.getenv("GR_API_KEY")
 
+# Set up API host
+if not os.getenv("API_HOST"):
+    raise RuntimeError("API_HOST is not set")
+api_host = os.getenv("API_HOST")
 
 def is_isbn_code(search):
     """checks if the received string is valid isbn number"""

@@ -7,7 +7,7 @@ from flask import request, render_template, redirect, url_for, session,\
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.exceptions import abort, HTTPException
 
-from application import app, db, is_isbn_code, login_only, gr_api_key
+from application import app, db, is_isbn_code, login_only, gr_api_key, api_host
 from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
 
 
@@ -150,7 +150,8 @@ def search():
 def book(book_isbn):
     form = ReviewForm()
 
-    r_api = requests.get(f'http://localhost:5000/api/{book_isbn}')
+    r_api = requests.get(f'{api_host}{book_isbn}')
+
     if r_api.status_code != 200:
         return abort(404)
 
@@ -210,7 +211,6 @@ def book(book_isbn):
             form.process()
         reviews.append(
             {'user': r_api[5], 'rating': r_api[3], 'review': r_api[4]})
-
 
     return render_template(
         'book.html',
