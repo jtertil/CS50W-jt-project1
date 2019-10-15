@@ -1,3 +1,6 @@
 /venv/
 /flask_session/
 /error_log.txt
+
+get_gr_author_info.py
+get_gr_info.py

@@ -4,6 +4,7 @@ from xml.etree.ElementTree import fromstring, ElementTree
 
 from flask import request, render_template, redirect, url_for, session,\
     flash
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.exceptions import abort, HTTPException
 
@@ -13,7 +14,7 @@ from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
 
 @app.route('/')
 def index():
-
+    # get random book titles, and pass it to template
     q = db.execute(
         'SELECT title '
         'FROM public.book '
@@ -47,7 +48,7 @@ def register():
         db.commit()
         flash(
             'Registration completed successfully. '
-            'Now you can <a href="./login" class="alert-link">login</a>.',
+            'Now you can <a href="./login" class="alert-link">log in</a>.',
             'success')
         return redirect(url_for('index'))
 
@@ -62,7 +63,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    session['user'] = None
+    session['user'] = None  # logout current user if any
     if request.method == 'POST' and form.validate_on_submit():
         u = db.execute(
             'SELECT * FROM public.user '
@@ -102,11 +103,13 @@ def logout():
 def search():
     form = SearchForm()
     if request.method == 'POST' and form.validate_on_submit():
+        # call helper function to check if the user put ISBN into search
         user_provides_isbn = is_isbn_code(form.search.data)
 
         if user_provides_isbn:
             return redirect(url_for('book', book_isbn=user_provides_isbn))
 
+        # search for authors, and books
         else:
             s_q_authors = db.execute(
                 'SELECT *, '
@@ -150,6 +153,7 @@ def search():
 def book(book_isbn):
     form = ReviewForm()
 
+    # call application own API to get book details
     r_api = requests.get(f'{api_host}{book_isbn}')
 
     if r_api.status_code != 200:
@@ -160,33 +164,27 @@ def book(book_isbn):
     except JSONDecodeError:
         return abort(500)
 
-    r_gr_api = requests.get(
-            "https://www.goodreads.com/book/review_counts.json",
-            params={"key": gr_api_key, "isbns": book_isbn})
+    # call goodreads API to get book details
+    try:
+        r_gr_api = requests.get(
+                "https://www.goodreads.com/book/review_counts.json",
+                params={"key": gr_api_key, "isbns": book_isbn})
+    except requests.RequestException:
+        r_gr_api = None
 
     try:
         gr_api_json = r_gr_api.json()
     except JSONDecodeError:
         gr_api_json = None
 
+    # check for book id
     book_id = db.execute(
         'SELECT id FROM public.book '
         'WHERE isbn = :isbn',
         {'isbn': book_json['isbn']}
     ).fetchone()
 
-    r_q = db.execute(
-        'SELECT public.user_book.*, '
-        'public.user.name '
-        'FROM public.user_book '
-        'JOIN public.user '
-        'ON public.user.id = public.user_book.user_id '
-        'WHERE book_id = :book_id '
-        'ORDER BY (id) DESC ',
-        {"book_id": book_id[0]}
-    ).fetchall()
-
-    # TODO avoid resending api requests in case of page reload
+    # insert or update review if form submitted
     if request.method == 'POST' and form.validate_on_submit():
         db.execute(
             'INSERT INTO public.user_book (user_id, book_id, score, review) '
@@ -201,6 +199,19 @@ def book(book_isbn):
         db.commit()
         return redirect(url_for('book', book_isbn=book_isbn))
 
+    # get reviews (newest first)
+    r_q = db.execute(
+        'SELECT public.user_book.*, '
+        'public.user.name '
+        'FROM public.user_book '
+        'JOIN public.user '
+        'ON public.user.id = public.user_book.user_id '
+        'WHERE book_id = :book_id '
+        'ORDER BY (id) DESC ',
+        {"book_id": book_id[0]}
+    ).fetchall()
+
+    # build list of reviews and check if current user already send a review
     reviews = []
     already_review = False
     for r_api in r_q:
@@ -226,6 +237,7 @@ def book(book_isbn):
 @login_only
 def author(author_id):
 
+    # check author id and goodreads author id
     a_q = db.execute(
         'SELECT public.author.id, '
         'public.author.name, '
@@ -238,18 +250,23 @@ def author(author_id):
         {'author_id': int(author_id)}
     ).fetchone()
 
+    # check goodreads api and get xml formatted author info
     try:
-        r = requests.get(
+        r_gr_a = requests.get(
             f'https://www.goodreads.com/author/show/'
             f'{a_q.author_id_gr}?format=xml&key={gr_api_key}')
-        tree = ElementTree(fromstring(r.text))
+    except requests.RequestException:
+        r_gr_a = None
+
+    # set author description to None if no data received, else parse xml data
+    if r_gr_a.status_code != 200:
+        dsc = None
+    else:
+        tree = ElementTree(fromstring(r_gr_a.text))
         root = tree.getroot()
         dsc = root[1][8].text
 
-    # # TODO bare except
-    except:
-        dsc = None
-
+    # prepare author's books (newest first)
     a_books = db.execute(
        'SELECT public.book.* '
        'FROM public.book_author '
