@@ -9,7 +9,7 @@ CS50W Web Programming with Python and JavaScript course.
 * [sample api response](https://cs50w-jt-project1.herokuapp.com/api/1594561753)
 
 #### Technologies used:
- * Python 3: flask, jinja, unittest, [ISBNdb](https://isbndb.com/apidocs)
+ * Python 3: flask, WTForms, jinja, unittest, [ISBNdb](https://isbndb.com/apidocs)
  * PostgreSQL 10: Foreign keys, joins, aggregate functions, full text search 
  * SQLAlchemy to execute raw SQL commands 
  * JavaScript, Bootstrap, jQuery, [typeit.js](https://typeitjs.com/), [bootstrap star rating](https://plugins.krajee.com/star-rating)
@@ -17,7 +17,11 @@ CS50W Web Programming with Python and JavaScript course.
 
 #### My role:
  * App build from scratch. Design, front-end, and back-end, are my work.
- * import.py allows import books and authors from csv file.
+ * application.py - main config file, and helper functions
+ * views.py - all views functions
+ * import.py - allows import books and authors from csv file.
+ * form.py - forms and validators
+ * test.py - unittests
 
 #### Project main requirements:
 * Registration: Users should be able to register for your website, providing (at minimum) a username and password.

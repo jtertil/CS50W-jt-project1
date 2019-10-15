@@ -1,6 +1,9 @@
 /venv/
 /flask_session/
-/error_log.txt
+/tools/
 
-get_gr_author_info.py
-get_gr_info.py
+
+/.gitignore
+/error_log.txt
+/Procfile
+
