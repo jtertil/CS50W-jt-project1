@@ -1,4 +1,5 @@
 ## CS50W2019 Project 1
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cc4ab1eb4b164773a41b4eb0572fa56b)](https://www.codacy.com/manual/jtertil/CS50W2019-project1?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jtertil/CS50W2019-project1&amp;utm_campaign=Badge_Grade)
 
 ### About:
 A small (5000 books), ["goodreads-like"](https://www.goodreads.com/) book reviews web app done within 
@@ -45,7 +46,7 @@ CS50W Web Programming with Python and JavaScript course.
 * errors in the production environment are logged into the file
 * error handler and custom pages for 4** and 5** errors
 * users are able to edit submitted reviews
-* if the user submits valid ISBN code into the search form, app redirect directly into he book details page
+* if the user submits valid ISBN code into the search form, app redirect directly into the book details page
 * customized bootstrap to improve app look
 
 
