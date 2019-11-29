@@ -17,10 +17,10 @@ CS50W Web Programming with Python and JavaScript course.
  * API, JSON, XML parsing.
 
 #### My role:
- * App build from scratch. Design, front-end, and back-end, are my work.
+ * App built from scratch. Design, front-end and back-end are my work.
  * application.py - main config file, and helper functions
  * views.py - all views functions
- * import.py - allows import books and authors from csv file.
+ * import.py - a command-line tool that allows import data from csv file
  * form.py - forms and validators
  * test.py - unittests
 
@@ -39,14 +39,14 @@ CS50W Web Programming with Python and JavaScript course.
 * If you’ve added any Python packages that need to be installed in order to run your web application, be sure to add them to requirements.txt!
 
 #### Personal touch and additional features:
-* authors and books are diverse into separate tables to prevent data duplication (one author could write many books, and also one book could have many more than one author)
+* authors and books are divided into separate tables to prevent data duplication (one author could write many books, and also one book could have many more than one author)
 * landing page for author details with photo, description and list of books from database 
 * full text search instead of LIKE 
 * form validation errors are caught and displayed by flash massages
 * errors in the production environment are logged into the file
 * error handler and custom pages for 4** and 5** errors
 * users are able to edit submitted reviews
-* if the user submits valid ISBN code into the search form, app redirect directly into the book details page
+* if the user submits valid ISBN code into the search form, app redirects directly into the book details page
 * customized bootstrap to improve app look
 
 

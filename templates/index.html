@@ -5,7 +5,7 @@
 {% block content %}
 <div class="d-flex flex-column justify-content-around">
   <div>
-    <p class="text-center font-weight-light display-title">Did you read...</p>
+    <p class="text-center font-weight-light display-title">Have you read...</p>
     <p id="replaceStrings" class="display-title text-center font-weight-bold"></p>
 
     <a href="{% if session['user'] %}{{url_for('search')}}{% else %}{{url_for('register')}}{% endif %}">
