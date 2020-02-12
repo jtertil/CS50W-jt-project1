@@ -2,7 +2,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cc4ab1eb4b164773a41b4eb0572fa56b)](https://www.codacy.com/manual/jtertil/CS50W2019-project1?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jtertil/CS50W2019-project1&amp;utm_campaign=Badge_Grade)
 
 ### About:
-A small (5000 books), ["goodreads-like"](https://www.goodreads.com/) book reviews web app done within 
+A small (5000 books), ["goodreads-like"](https://www.goodreads.com/) book reviews web app inspired 
 CS50W Web Programming with Python and JavaScript course.
 
 #### Live demo:
@@ -16,8 +16,18 @@ CS50W Web Programming with Python and JavaScript course.
  * JavaScript, Bootstrap, jQuery, [typeit.js](https://typeitjs.com/), [bootstrap star rating](https://plugins.krajee.com/star-rating)
  * API, JSON, XML parsing.
 
+### How it works:
+![Application ERD](doc/cs50wp1_ERD.png)
+
+### How it looks:
+![Search results](doc/cs50wp1_search_results.jpg)
+
+![Author details](doc/cs50wp1_author_details.jpg)
+
+![Reviews](doc/cs50wp1_reviews.jpg)
+
 #### My role:
- * App built from scratch. Design, front-end and back-end are my work.
+App built from scratch. Design, front-end and back-end are my work. 
  * application.py - main config file, and helper functions
  * views.py - all views functions
  * import.py - a command-line tool that allows import data from csv file
@@ -39,7 +49,7 @@ CS50W Web Programming with Python and JavaScript course.
 * If you’ve added any Python packages that need to be installed in order to run your web application, be sure to add them to requirements.txt!
 
 #### Personal touch and additional features:
-* authors and books are divided into separate tables to prevent data duplication (one author could write many books, and also one book could have many more than one author)
+* authors and books are divided into separate tables to prevent data duplication (one author could write many books, and also one book could have more than one author)
 * landing page for author details with photo, description and list of books from database 
 * full text search instead of LIKE 
 * form validation errors are caught and displayed by flash massages
