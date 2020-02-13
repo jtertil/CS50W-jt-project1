@@ -2,15 +2,15 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cc4ab1eb4b164773a41b4eb0572fa56b)](https://www.codacy.com/manual/jtertil/CS50W2019-project1?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jtertil/CS50W2019-project1&amp;utm_campaign=Badge_Grade)
 
 ### About:
-A small (5000 books), ["goodreads-like"](https://www.goodreads.com/) book reviews web app inspired 
-CS50W Web Programming with Python and JavaScript course.
+A small (5000 books), ["goodreads-like"](https://www.goodreads.com/) book reviews web app. 
+Project is inspired by CS50W Web Programming with Python and JavaScript course.
 
 #### Live demo:
 * [web app](https://cs50w-jt-project1.herokuapp.com/)
 * [sample api response](https://cs50w-jt-project1.herokuapp.com/api/1594561753)
 
 #### Technologies used:
- * Python 3: flask, WTForms, jinja, unittest, [ISBNdb](https://isbndb.com/apidocs)
+ * Python 3: flask, WTForms, jinja, unittest, [isbnlib](https://pypi.org/project/isbnlib/)
  * PostgreSQL 10: Foreign keys, joins, aggregate functions, full text search 
  * SQLAlchemy to execute raw SQL commands 
  * JavaScript, Bootstrap, jQuery, [typeit.js](https://typeitjs.com/), [bootstrap star rating](https://plugins.krajee.com/star-rating)

@@ -42,6 +42,7 @@ if not os.getenv("API_HOST"):
     raise RuntimeError("API_HOST is not set")
 api_host = os.getenv("API_HOST")
 
+
 def is_isbn_code(search):
     """checks if the received string is valid isbn number"""
     check = ''.join(ch for ch in search if ch.isalnum())
